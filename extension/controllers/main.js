@@ -23,16 +23,16 @@ angular.module('mainController', ['ui.router'])
     $.ajax({
       type: 'GET',
       url: destUrl + '/test/users/groups',
-      data : {username: username},
+      data: {username: username},
       success: (data) => {
         console.log('GROUPS DATA', data);
-        alert(JSON.stringify(data));
+        // alert(JSON.stringify(data));
         $scope.groups = data;
       },
     }).fail( (data) => { 
       alert(JSON.stringify(data));
       console.log('FAIL', data);
     });
-  }
+  };
   $scope.getUserGroups();
 });
