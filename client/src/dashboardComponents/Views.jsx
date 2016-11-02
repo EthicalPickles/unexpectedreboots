@@ -10,12 +10,14 @@ var Views = (props) => {
     );
   } else {
   //make this the callback to a get request for the user's group data and pass it into the three panels
+  // but what if someone makes a group named 'home' ????
     return (
       <div className='container'>
-        <Heading title={props.viewType} changeViewCb={props.changeViewCb} logoutCb={props.logoutCb}/>
+        <Heading title={props.viewType} changeViewCb={props.changeViewCb} logoutCb={props.logoutCb} />        
         <UserPanel owner={props.owner} groupid={props.groupid} />
-        <MarkupPanel groupid={props.groupid} markups={[1, 2]}/>
-        <SharedPanel groupid={props.groupid} sites={[1, 2, 3]}/>
+        <MarkupPanel groupid={props.groupid} markups={[1, 2]} />
+        <SharedPanel groupid={props.groupid} sites={[1, 2, 3]} />
+        <LeaveGroupButton groupid={props.groupid} />
       </div>
     ); 
   }

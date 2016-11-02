@@ -6,3 +6,4 @@ var failAlreadyUser = $('[data-remodal-id=already-user-fail-modal]').remodal();
 
 var askGroup = $('[data-remodal-id=modal]').remodal();
 var failGroup = $('[data-remodal-id=group-fail-modal]').remodal();
+var leaveGroup = $('[data-remodal-id=group-leave-modal]').remodal();

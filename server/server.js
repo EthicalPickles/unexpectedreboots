@@ -29,7 +29,7 @@ app.use(session({
 app.use('/api/users/register', routes.createUser);
 app.use('/api/users/login', routes.checkUser);
 app.use('/api/users/groups', sessionChecker, routes.getUserGroups);
-app.use('/api/users/markups', sessionChecker, routes.getUserMarkups)
+app.use('/api/users/markups', sessionChecker, routes.getUserMarkups);
 // TODO
 app.use('/api/users/update', sessionChecker, routes.updateUser);
 

@@ -153,6 +153,7 @@ exports.addMember = function(req, res) {
 exports.editGroup = function(req, res) {
   // TODO:
   // This endpoint should allow owners to remove members from a group
+  
 };
 
 exports.getGroupMarkups = function(req, res) {

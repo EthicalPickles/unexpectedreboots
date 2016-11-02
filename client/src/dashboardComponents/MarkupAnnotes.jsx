@@ -9,5 +9,4 @@ var MarkupAnnotes = (props) => {
 };
 
 
-window.MarkupAnnotes = MarkupAnnotes
-;
+window.MarkupAnnotes = MarkupAnnotes;
