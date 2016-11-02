@@ -24,7 +24,6 @@ editor = new MediumEditor(elements, {
         start: '<span style="background-color: powderblue;">',
         end: '</span>',
         action: function(html, mark) {
-          alert('share with select working');
           postSelection(html);
           return html;
         }
