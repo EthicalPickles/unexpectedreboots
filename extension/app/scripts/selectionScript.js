@@ -6,8 +6,9 @@ var globalGroups = [];
 var username = undefined;
 
 chrome.runtime.sendMessage({
-  text: '333'
+  text: 'getUsername'
 }, function(response) {
+  console.log(response.username);
   username = response.username;
   $.ajax({
     type: 'GET',
@@ -94,8 +95,9 @@ editor = new MediumEditor(elements, {
         start: '<span style="background-color: powderblue;">',
         end: '</span>',
         action: function(html, mark) {
-          postSelection(html);
-          return html;
+          // postSelection(html);
+          console.log('error');
+          // return html;
         }
       }),
       'sendSelection': new MediumButton({
