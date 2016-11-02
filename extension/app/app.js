@@ -15,7 +15,6 @@ var myApp = angular.module('Markable', [
 
 
 myApp.constant('__env', env);
-
 myApp.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/');
   $stateProvider

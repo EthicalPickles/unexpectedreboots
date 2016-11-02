@@ -109,7 +109,7 @@ exports.getGroupMembers = function(req, res) {
   groups.getMembers(groupID, function(err, result) {
     err ? res.send(err) : res.send(result);
   });
-}
+};
 
 exports.createGroup = function(req, res) {
   var groupName = req.query.groupName || req.body.groupName;

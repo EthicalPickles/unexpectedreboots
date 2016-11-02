@@ -30,11 +30,11 @@ var postSelection = function(targetText) {
   var testExport = editor.exportSelection();
   console.log(testExport, targetText, 'here frank');
   chrome.runtime.sendMessage({
-    action : 'add',
+    action: 'add',
     selection: JSON.stringify(testExport),
     text: targetText
   }, function(response) {
-    // console.log(response, 'response');
+
   });
 }
 
@@ -82,6 +82,7 @@ $('body').delegate('button.medium-editor-action.medium-editor-button-first', 'cl
   })
 });
 
+
 editor = new MediumEditor(elements, {
   anchorPreview: false,
   placeholder: false,
@@ -90,6 +91,7 @@ editor = new MediumEditor(elements, {
     buttons: ['sendToSelect', 'sendSelection', 'sendWithComments']
   },
   extensions: {
+<<<<<<< f5858f3b59dd67de5633311694cca003d9f9f8ac
       'sendToSelect': new MediumButton({
         label: 'Share With Select',
         start: '<span style="background-color: powderblue;">',
@@ -119,6 +121,36 @@ editor = new MediumEditor(elements, {
         }
       })
     }
+=======
+    'sendToSelect': new MediumButton({
+      label: 'Share With Select',
+      start: '<span style="background-color: powderblue;">',
+      end: '</span>',
+      action: function(html, mark) {
+        postSelection(html);
+        return html;
+      }
+    }),
+    'sendSelection': new MediumButton({
+      label: 'Share with All',
+      start: '<span style="background-color: powderblue;">',
+      end: '</span>',
+      action: function(html, mark) {
+        postSelection(html);
+        return html;
+      }
+    }),
+    'sendWithComments': new MediumButton({
+      label: 'Share and Add Comment',
+      start: '<span style="background-color: powderblue;">',
+      end: '</span>',
+      action: function(html, mark) {
+        postSelection(html);
+        return html;
+      }
+    })
+  }
+>>>>>>> Alignment changes
 });
 editor.subscribe('editableInput', function (event, editable) {
     // Do some work
@@ -126,6 +158,7 @@ editor.subscribe('editableInput', function (event, editable) {
     console.log(editable,'editable');
 
 });
+
 var colors = {0: '#EDE2AF', 1: '#E2BACB', 2: '#BECFE8', 3: '#F4CCB0', 4: '#BCE0B5'};
 var userSet = {};
 var numbers = [0,1,2,3,4]
@@ -147,57 +180,56 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       ';">' + getCurrentSelection() + '<span class="markable-tooltip-popup">' + allSelections[i].author
       + '<br>' + moment(allSelections[i].createdat).twitterShort() + ' ago</span></span>';
     var sel = window.getSelection();
-        var range;
-            //Set new Content
-            if (sel.getRangeAt && sel.rangeCount) {
-                range = window.getSelection().getRangeAt(0);
-                range.deleteContents();
+    var range;
+    //Set new Content
+    if (sel.getRangeAt && sel.rangeCount) {
+      range = window.getSelection().getRangeAt(0);
+      range.deleteContents();
 
-                // Create a DocumentFragment to insert and populate it with HTML
-                // Need to test for the existence of range.createContextualFragment
-                // because it's non-standard and IE 9 does not support it
-                if (range.createContextualFragment) {
-                    fragment = range.createContextualFragment(html);
-                } else {
-                    var div = document.createElement('div');
-                    div.innerHTML = html;
-                    fragment = document.createDocumentFragment();
-                    while ((child = div.firstChild)) {
-                        fragment.appendChild(child);
-                    }
+      // Create a DocumentFragment to insert and populate it with HTML
+      // Need to test for the existence of range.createContextualFragment
+      // because it's non-standard and IE 9 does not support it
+      if (range.createContextualFragment) {
+        fragment = range.createContextualFragment(html);
+      } else {
+        var div = document.createElement('div');
+        div.innerHTML = html;
+        fragment = document.createDocumentFragment();
+        while ((child = div.firstChild)) {
+          fragment.appendChild(child);
+        }
 
-                }
-                var firstInsertedNode = fragment.firstChild;
-                var lastInsertedNode = fragment.lastChild;
-                range.insertNode(fragment);
-                if (firstInsertedNode) {
-                    range.setStartBefore(firstInsertedNode);
-                    range.setEndAfter(lastInsertedNode);
-                }
-                sel.removeAllRanges();
-                sel.addRange(range);
-            }
+      }
+      var firstInsertedNode = fragment.firstChild;
+      var lastInsertedNode = fragment.lastChild;
+      range.insertNode(fragment);
+      if (firstInsertedNode) {
+        range.setStartBefore(firstInsertedNode);
+        range.setEndAfter(lastInsertedNode);
+      }
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
 
   }
 });
-function getCurrentSelection() {
 
-  var html = '', sel;
-       if (typeof window.getSelection != 'undefined') {
-           sel = window.getSelection();
-           if (sel.rangeCount) {
-               var container = document.createElement('div');
-               for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-                   container.appendChild(sel.getRangeAt(i).cloneContents());
-               }
-               html = container.innerHTML;
-           }
-       } else if (typeof document.selection != 'undefined') {
-           if (document.selection.type == 'Text') {
-               html = document.selection.createRange().htmlText;
-           }
-       }
-
+var getCurrentSelection = function() {
+  var html = '';
+  var sel;
+  if (typeof window.getSelection != 'undefined') {
+    sel = window.getSelection();
+    if (sel.rangeCount) {
+      var container = document.createElement('div');
+      for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+        container.appendChild(sel.getRangeAt(i).cloneContents());
+      }
+      html = container.innerHTML;
+    }
+  } else if (typeof document.selection != 'undefined') {
+    if (document.selection.type == 'Text') {
+      html = document.selection.createRange().htmlText;
+    }
+  }
   return html;
-
 };

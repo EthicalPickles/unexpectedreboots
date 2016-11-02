@@ -73,7 +73,7 @@ angular.module('dropdownController', [])
         $scope.password = '';
         $scope.showError = true;
       }
-    });
+    })
   };
 });
 
