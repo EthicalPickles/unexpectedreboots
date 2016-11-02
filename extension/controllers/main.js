@@ -3,6 +3,7 @@ angular.module('mainController', ['ui.router'])
 .controller('main', function($scope, $http, $location, $state, __env) {
   console.log('mainController');
   const liveUrl = __env.liveUrl;
+  $scope.groups = [];
   $scope.testSession = function() {
     chrome.tabs.create({url: liveUrl + '/client/dashboard.html'})
   },
@@ -16,7 +17,7 @@ angular.module('mainController', ['ui.router'])
       $state.transitionTo('login');
     });
   };
-  $scope.groups = [];
+
   $scope.getUserGroups = function() {
     const username = localStorage.getItem('username');
     const destUrl = localStorage.getItem('destUrl');
@@ -27,9 +28,11 @@ angular.module('mainController', ['ui.router'])
       success: (data) => {
         console.log('GROUPS DATA', data);
         // alert(JSON.stringify(data));
-        $scope.groups = data;
+        for(var i = 0; i < response.length; i++) {
+          $scope.groups.push(response[i].groupname);
+        }
       },
-    }).fail( (data) => { 
+    }).fail( (data) => {
       alert(JSON.stringify(data));
       console.log('FAIL', data);
     });

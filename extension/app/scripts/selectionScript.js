@@ -16,9 +16,19 @@ editor = new MediumEditor(elements, {
   placeholder: false,
   disableEditing: true,
   toolbar: {
-    buttons: ['sendSelection']
+    buttons: ['sendToSelect', 'sendSelection']
   },
   extensions: {
+      'sendToSelect': new MediumButton({
+        label: 'Share With Select',
+        start: '<span style="background-color: powderblue;">',
+        end: '</span>',
+        action: function(html, mark) {
+          alert('share with select working');
+          postSelection(html);
+          return html;
+        }
+      }),
       'sendSelection': new MediumButton({
         label: 'Share',
         start: '<span style="background-color: powderblue;">',
@@ -38,7 +48,7 @@ editor.subscribe('editableInput', function (event, editable) {
 });
 var colors = {0: '#EDE2AF', 1: '#E2BACB', 2: '#BECFE8', 3: '#F4CCB0', 4: '#BCE0B5'};
 var userSet = {};
-var numbers = [0,1,2,3,4]  
+var numbers = [0,1,2,3,4]
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   console.log(request, 'request');
 
@@ -52,9 +62,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     // <a href="#" class="markable-tooltip" style="background-color: yellow;">' + getCurrentSelection() + '<span> Testing a long tooltip </a>';
 
-    var html = '<span class="markable-tooltip"' + 
+    var html = '<span class="markable-tooltip"' +
       'style="background-color:' + colors[userSet[allSelections[i].author]] +
-      ';">' + getCurrentSelection() + '<span class="markable-tooltip-popup">' + allSelections[i].author 
+      ';">' + getCurrentSelection() + '<span class="markable-tooltip-popup">' + allSelections[i].author
       + '<br>' + moment(allSelections[i].createdat).twitterShort() + ' ago</span></span>';
     var sel = window.getSelection();
         var range;
@@ -75,7 +85,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                     while ((child = div.firstChild)) {
                         fragment.appendChild(child);
                     }
-            
+
                 }
                 var firstInsertedNode = fragment.firstChild;
                 var lastInsertedNode = fragment.lastChild;
@@ -87,7 +97,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 sel.removeAllRanges();
                 sel.addRange(range);
             }
-    
+
   }
 });
 function getCurrentSelection() {
@@ -107,7 +117,7 @@ function getCurrentSelection() {
                html = document.selection.createRange().htmlText;
            }
        }
-  
+
   return html;
-  
+
 };
