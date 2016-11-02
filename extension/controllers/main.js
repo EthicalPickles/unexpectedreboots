@@ -28,12 +28,12 @@ angular.module('mainController', ['ui.router'])
       success: (data) => {
         console.log('GROUPS DATA', data);
         // alert(JSON.stringify(data));
-        for(var i = 0; i < response.length; i++) {
-          $scope.groups.push(response[i].groupname);
+        for(var i = 0; i < data.length; i++) {
+          $scope.groups.push(data[i].groupname);
         }
+        console.log(username, $scope.groups, 'here franco here');
       },
     }).fail( (data) => {
-      alert(JSON.stringify(data));
       console.log('FAIL', data);
     });
   };
