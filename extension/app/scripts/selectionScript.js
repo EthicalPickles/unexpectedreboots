@@ -2,16 +2,38 @@
 
 vex.defaultOptions.className = 'vex-theme-os';
 
+var globalGroups = [];
+var username = undefined;
+
+chrome.runtime.sendMessage({
+  text: '333'
+}, function(response) {
+  username = response.username;
+  $.ajax({
+    type: 'GET',
+    url: 'http://127.0.0.1:3000' + '/test/users/groups',
+    data: {username: username},
+    success: (data) => {
+      for(var i = 0; i < data.length; i++) {
+        globalGroups.push(data[i].groupname);
+      }
+    },
+  })
+});
+
+
 var elements = document.querySelectorAll("p, li, em, span, h1, h2, h3, h4, h5, td, tr, th, tbody");
 
 // var elements = document.getElementsByTagName("*");
 var postSelection = function(targetText) {
   var testExport = editor.exportSelection();
+  console.log(testExport, targetText, 'here frank');
   chrome.runtime.sendMessage({
     action : 'add',
     selection: JSON.stringify(testExport),
     text: targetText
   }, function(response) {
+    // console.log(response, 'response');
   });
 }
 
@@ -27,9 +49,33 @@ $('body').delegate('button.medium-editor-action.medium-editor-button-last', 'cli
       ],
       callback: function (data) {
           if (!data) {
-              console.log('Cancelled')
+              console.log('Cancelled');
           } else {
-              console.log('Comment', data.comment)
+              console.log('Comment', data.comment);
+          }
+      }
+  })
+});
+
+$('body').delegate('button.medium-editor-action.medium-editor-button-first', 'click', function() {
+
+  var groupCheckBox = [];
+  globalGroups.forEach(function (group) {
+    groupCheckBox.push('<label><input type="checkbox" value="' + group + '">' + group + '</label><br>');
+  });
+
+  vex.dialog.open({
+      message: 'Select all that apply',
+      input: groupCheckBox.join(''),
+      buttons: [
+          $.extend({}, vex.dialog.buttons.YES, { text: 'Enter' }),
+          $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+      ],
+      callback: function (data) {
+          if (!data) {
+              console.log('Cancelled');
+          } else {
+              console.log('success');
           }
       }
   })

@@ -49,15 +49,22 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
                   }
                 })
               };
-            } 
+            }
           })
         }
       });
     }
   }
 });
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) { 
-  console.log('background script triggered');    
+
+
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log('background script triggered');
+  if (request.text === '333') {
+    var usernameTest = localStorage.getItem('username');
+    sendResponse({username: usernameTest});
+  }
   if (username) {
     var selection = request.selection;
     var destUrl = localStorage.getItem('destUrl');
@@ -79,8 +86,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           text: request.text,
           comment: null
         },
-        success: function() {
+        success: function(data) {
           // alert('success');
+          var obj = {'hello': 'world'};
+          alert('hello');
+          sender(obj);
+          sendResponse(obj);
         }
       });
 
@@ -126,10 +137,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           }
         }
       });
-
-
     });
-  } 
+  }
 })
 
 
