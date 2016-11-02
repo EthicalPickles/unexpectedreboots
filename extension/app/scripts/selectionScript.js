@@ -11,6 +11,17 @@ var postSelection = function(targetText) {
   }, function(response) {
   });
 }
+
+
+var flag = false;
+$('body').delegate('button.medium-editor-action.medium-editor-button-last', 'mouseover', function() {
+  if (!flag) {
+    $('button.medium-editor-action.medium-editor-button-last').append("<input type=\"text\" class=\"fieldname\" />");
+      // alert('hello world');
+      flag = true;
+  }
+});
+
 editor = new MediumEditor(elements, {
   anchorPreview: false,
   placeholder: false,
