@@ -11,7 +11,7 @@ class SharedPanel extends React.Component {
   fetchGroupSites() {
     var context = this;
     console.log('fetching group sites');
-    fetch('http://162.243.154.104:3000/test/groups/sites', {
+    fetch(SERVER_IP + ':3000/test/groups/sites', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({groupID: this.props.groupid}) //TODO: change to groupid in props

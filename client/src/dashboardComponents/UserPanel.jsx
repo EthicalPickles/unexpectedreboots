@@ -11,7 +11,7 @@ class UserPanel extends React.Component {
   fetchUsers() {
     var context = this;
 
-    fetch('http://162.243.154.104:3000/test/groups/users', {
+    fetch(SERVER_IP + ':3000/test/groups/users', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({groupID: this.props.groupid})
@@ -34,7 +34,7 @@ class UserPanel extends React.Component {
 
      $('button.user').click(function() {
         $.ajax({
-          url: 'http://162.243.154.104:3000/test/groups/add',
+          url: SERVER_IP + ':3000/test/groups/add',
           method: 'POST',
           data: {
             groupID: context.props.groupid, 

@@ -12,7 +12,7 @@ class GroupPanel extends React.Component {
   fetchGroups() {
     var context = this;
 
-    fetch('http://162.243.154.104:3000/test/users/groups', {
+    fetch(SERVER_IP + ':3000/test/users/groups', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({username: document.cookie.split('=')[1]}) //TODO: change to username in cookie 
@@ -36,7 +36,7 @@ class GroupPanel extends React.Component {
 
       $('.group').click(function() {
         $.ajax({
-          url: 'http://162.243.154.104:3000/test/groups/create',
+          url: SERVER_IP + ':3000/test/groups/create',
           method: 'POST',
           data: {
             groupName: $('.groupName').val(),

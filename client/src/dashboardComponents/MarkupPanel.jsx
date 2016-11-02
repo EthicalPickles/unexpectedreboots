@@ -12,7 +12,7 @@ class MarkupPanel extends React.Component {
     var context = this;
 
     if (groupid === null) {
-      fetch('http://162.243.154.104:3000/test/users/markups', {
+      fetch(SERVER_IP + ':3000/test/users/markups', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({username: document.cookie.split('=')[1]}) //TODO: change to username in cookie
@@ -26,7 +26,7 @@ class MarkupPanel extends React.Component {
         });
       }); 
     } else {
-      fetch('http://162.243.154.104:3000/test/groups/markups', {
+      fetch(SERVER_IP + ':3000/test/groups/markups', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({groupID: context.props.groupid}) //TODO: change to groupid passed into function
