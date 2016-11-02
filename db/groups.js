@@ -225,6 +225,22 @@ exports.add = function(groupID, username, newMember, callback) {
   });
 };
 
+exports.remove = function(groupID, username, callback) {
+  console.log('/**', username, 'is leaving group:', groupID, '**/');
+
+  pool.query({
+    text: 'DELETE FROM usersgroups \
+           WHERE usersgroups.groupid = \'' + groupID + '\' \
+           AND usergroups.userid \
+           IN (SELECT id FROM users WHERE username = \'' + username + '\')' 
+  },
+
+  function(err, rows) {
+    err ? callback(err, null) : callback(null, true);
+  });
+};
+
+
 exports.getMembers = function(groupID, callback) {
 
   pool.query({

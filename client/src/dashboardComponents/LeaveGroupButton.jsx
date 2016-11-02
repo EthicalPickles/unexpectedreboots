@@ -18,8 +18,8 @@ class LeaveGroupButton extends React.Component {
           url: SERVER_IP + ':3000/api/groups/edit',
           method: 'POST',
           data: {
-            groupid: context.props.groupid,
-            owner: getUsername()
+            groupID: context.props.groupid,
+            username: getUsername()
           },
           success: function(data) {
             if (data === true) {
