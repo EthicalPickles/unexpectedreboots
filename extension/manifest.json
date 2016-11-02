@@ -26,6 +26,8 @@
       "css": [
         "lib/medium-editor/dist/css/medium-editor.css",
         "lib/medium-editor/dist/css/themes/beagle.css",
+        "lib/vex-master/dist/css/vex.css",
+        "lib/vex-master/dist/css/vex-theme-os.css",
         "css/tooltip.css"
       ],
       "js": [
@@ -33,7 +35,8 @@
         "lib/moment-min.js",
         "lib/moment-twitter.js",
         "lib/medium-editor/dist/js/medium-editor.js",
-        "lib/MediumButton.js", 
+        "lib/MediumButton.js",
+        "lib/vex-master/dist/js/vex.combined.min.js",
         "app/scripts/selectionScript.js"
       ]
     }
