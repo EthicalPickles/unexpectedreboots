@@ -5,7 +5,11 @@ vex.defaultOptions.className = 'vex-theme-os';
 var globalGroups = [];
 var username = undefined;
 var test = null;
-var uniqueGroups = [];
+
+/***************************************************
+    GET USERNAME FROM LOCAL STORAGE
+    BY REQUESTING IT FROM BACKGROUND.JS
+****************************************************/
 
 chrome.runtime.sendMessage({
   text: 'getUsername'
@@ -30,6 +34,11 @@ chrome.runtime.sendMessage({
 var elements = document.querySelectorAll("p, li, em, span, h1, h2, h3, h4, h5, td, tr, th, tbody");
 
 // var elements = document.getElementsByTagName("*");
+
+/***************************************************
+      POST SELECTION AND SEND TO BACKGROUND.JS
+****************************************************/
+
 var postSelection = function(targetText, uniqGroup) {
   var testExport = editor.exportSelection();
   console.log(uniqGroup);
@@ -42,6 +51,12 @@ var postSelection = function(targetText, uniqGroup) {
 
   });
 }
+
+
+/***************************************************
+            MARKUP BUTTON FOR COMMENTS
+****************************************************/
+
 
 $('body').delegate('button.medium-editor-action.medium-editor-button-last', 'click', function() {
   vex.dialog.open({
@@ -62,6 +77,12 @@ $('body').delegate('button.medium-editor-action.medium-editor-button-last', 'cli
       }
   })
 });
+
+
+/***************************************************
+          MARKUP BUTTON FOR SELECTING GROUPS
+****************************************************/
+
 
 $('body').delegate('button.medium-editor-action.medium-editor-button-first', 'click', function() {
 
@@ -87,6 +108,10 @@ $('body').delegate('button.medium-editor-action.medium-editor-button-first', 'cl
       }
   })
 });
+
+/***************************************************
+              MARKUP TOOLBAR
+****************************************************/
 
 
 editor = new MediumEditor(elements, {
@@ -138,6 +163,8 @@ editor.subscribe('editableInput', function (event, editable) {
 var colors = {0: '#EDE2AF', 1: '#E2BACB', 2: '#BECFE8', 3: '#F4CCB0', 4: '#BCE0B5'};
 var userSet = {};
 var numbers = [0,1,2,3,4]
+
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   console.log(request, 'request');
 
