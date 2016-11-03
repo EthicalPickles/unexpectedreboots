@@ -1,6 +1,6 @@
 vex.defaultOptions.className = 'vex-theme-os';
 
-var serverUrl = 'http://127.0.0.1:3000';
+var serverUrl = 'http://162.243.154.104:3000';
 var globalGroups = [];
 var globalGroupIds = [];
 var username = undefined;
