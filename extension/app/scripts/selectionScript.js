@@ -91,7 +91,6 @@ editor = new MediumEditor(elements, {
     buttons: ['sendToSelect', 'sendSelection', 'sendWithComments']
   },
   extensions: {
-<<<<<<< f5858f3b59dd67de5633311694cca003d9f9f8ac
       'sendToSelect': new MediumButton({
         label: 'Share With Select',
         start: '<span style="background-color: powderblue;">',
@@ -121,36 +120,6 @@ editor = new MediumEditor(elements, {
         }
       })
     }
-=======
-    'sendToSelect': new MediumButton({
-      label: 'Share With Select',
-      start: '<span style="background-color: powderblue;">',
-      end: '</span>',
-      action: function(html, mark) {
-        postSelection(html);
-        return html;
-      }
-    }),
-    'sendSelection': new MediumButton({
-      label: 'Share with All',
-      start: '<span style="background-color: powderblue;">',
-      end: '</span>',
-      action: function(html, mark) {
-        postSelection(html);
-        return html;
-      }
-    }),
-    'sendWithComments': new MediumButton({
-      label: 'Share and Add Comment',
-      start: '<span style="background-color: powderblue;">',
-      end: '</span>',
-      action: function(html, mark) {
-        postSelection(html);
-        return html;
-      }
-    })
-  }
->>>>>>> Alignment changes
 });
 editor.subscribe('editableInput', function (event, editable) {
     // Do some work

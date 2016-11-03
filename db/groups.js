@@ -231,7 +231,7 @@ exports.remove = function(groupID, username, callback) {
   pool.query({
     text: 'DELETE FROM usersgroups \
            WHERE usersgroups.groupid = \'' + groupID + '\' \
-           AND usergroups.userid \
+           AND usersgroups.userid \
            IN (SELECT id FROM users WHERE username = \'' + username + '\')' 
   },
 
