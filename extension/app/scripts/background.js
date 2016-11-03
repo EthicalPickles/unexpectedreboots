@@ -117,7 +117,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             url: destUrl + '/test/users/markups',
             data: {username: username},
             success: function(response) {
-              alert(response);
               console.log('Got user markups!', response);
               for (var i = 0; i < response.length; i++) {
                 if (response[i].markupid) {
@@ -143,9 +142,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           } else {
             shareGroups = JSON.parse(shareGroups);
           }
-
-          var postGroups = request.groups;
-
+          var postGroups = [];
           if(Array.isArray(response)){
             for(var i = 0; i < response.length; i++) {
               // var temp = response[i].groupid;
@@ -155,7 +152,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 }
               }
             }
-
             for (var j = 0; j < postGroups.length; j++) {
               $.ajax({
                 type: 'POST',
