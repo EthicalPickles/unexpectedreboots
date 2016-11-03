@@ -25,9 +25,11 @@ $('body').append(
 "<div class='remodal' data-remodal-id='group-leave-modal'>"+
   "<button data-remodal-action='close' class='remodal-close'></button>"+
   "<h1>Leave this group?</h1>"+
+  "<form>"+
   "<br>"+
   "<button data-remodal-action='confirm' class='remodal-confirm leave'>Leave</button>"+
   "<br>"+
+  "</form>"+
 "</div>"+
 
 //Ask the username of the new user
