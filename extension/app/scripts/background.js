@@ -64,8 +64,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   var username = localStorage.getItem('username');
   if (request.text === 'getUsername') {
     sendResponse({username: username});
-  }
-  if (username) {
+  } else if (username) {
     var selection = request.selection;
     var destUrl = localStorage.getItem('destUrl');
     var url = '';
@@ -101,13 +100,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           } else {
             shareGroups = JSON.parse(shareGroups);
           }
-          var postGroups = [];
+
+          var postGroups = request.groups;
+
           if(Array.isArray(response)){
             for(var i = 0; i < response.length; i++) {
+              // var temp = response[i].groupid;
               if(shareGroups[response[i].groupid]) {
-                postGroups.push(response[i].groupid);
+                if (!postGroups.includes(response[i].groupid)) {
+                  postGroups.push(response[i].groupid);
+                }
               }
             }
+
             for (var j = 0; j < postGroups.length; j++) {
               $.ajax({
                 type: 'POST',

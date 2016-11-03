@@ -4,6 +4,8 @@ vex.defaultOptions.className = 'vex-theme-os';
 
 var globalGroups = [];
 var username = undefined;
+var test = null;
+var uniqueGroups = [];
 
 chrome.runtime.sendMessage({
   text: 'getUsername'
@@ -15,9 +17,11 @@ chrome.runtime.sendMessage({
     url: 'http://127.0.0.1:3000' + '/test/users/groups',
     data: {username: username},
     success: (data) => {
+      console.log(data[0]);
       for(var i = 0; i < data.length; i++) {
         globalGroups.push(data[i].groupname);
       }
+      console.log(globalGroups, 'globalGROUPS');
     },
   })
 });
@@ -26,13 +30,14 @@ chrome.runtime.sendMessage({
 var elements = document.querySelectorAll("p, li, em, span, h1, h2, h3, h4, h5, td, tr, th, tbody");
 
 // var elements = document.getElementsByTagName("*");
-var postSelection = function(targetText) {
+var postSelection = function(targetText, uniqGroup) {
   var testExport = editor.exportSelection();
-  console.log(testExport, targetText, 'here frank');
+  console.log(uniqGroup);
   chrome.runtime.sendMessage({
     action: 'add',
     selection: JSON.stringify(testExport),
-    text: targetText
+    text: targetText,
+    groups: uniqGroup
   }, function(response) {
 
   });
@@ -61,8 +66,8 @@ $('body').delegate('button.medium-editor-action.medium-editor-button-last', 'cli
 $('body').delegate('button.medium-editor-action.medium-editor-button-first', 'click', function() {
 
   var groupCheckBox = [];
-  globalGroups.forEach(function (group) {
-    groupCheckBox.push('<label><input type="checkbox" value="' + group + '">' + group + '</label><br>');
+  globalGroups.forEach(function (group, index) {
+    groupCheckBox.push('<label><input name="selectGroups" type="checkbox" value="' + (index + 1) + '">' + group + '</label><br>');
   });
 
   vex.dialog.open({
@@ -76,7 +81,8 @@ $('body').delegate('button.medium-editor-action.medium-editor-button-first', 'cl
           if (!data) {
               console.log('Cancelled');
           } else {
-              console.log('success');
+              postSelection(test, data.selectGroups);
+              console.log('success', data.selectGroups);
           }
       }
   })
@@ -96,9 +102,10 @@ editor = new MediumEditor(elements, {
         start: '<span style="background-color: powderblue;">',
         end: '</span>',
         action: function(html, mark) {
+          test = html;
           // postSelection(html);
           console.log('error');
-          // return html;
+          return html;
         }
       }),
       'sendSelection': new MediumButton({
@@ -135,6 +142,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   console.log(request, 'request');
 
   var allSelections = request.selection;
+  console.log(allSelections, 'AllSelections', request);
   for (var i = 0; i < allSelections.length; i++) {
     if (!userSet[allSelections[i].author]) {
       userSet[allSelections[i].author] = numbers.splice(0,1);
