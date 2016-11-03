@@ -128,7 +128,7 @@ class GroupPanel extends React.Component {
   
 
     return (
-      <div>
+      <div className='container col-sm-6'>
         <AddGroup/>
         <JoinGroup allGroups={this.state.allGroups} toggleDropdownCb={this.toggleDropdownCb} joinGroupCb={this.joinGroupCb.bind(this)}/>
         { this.state.groups.filter((group) => {

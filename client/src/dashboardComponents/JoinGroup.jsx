@@ -3,8 +3,8 @@ var JoinGroup = (props) => {
 
 
   return (
-    <div className="container">
-      <div className='col-sm-3 join-group-bttn'>
+    <div >
+      <div className='col-sm-2 col-sm-offset-1 join-group-bttn'>
         <div className="dropdown">
           <button className="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" onClick={props.toggleDropdownCb}>Join Group
             <span className="caret"></span>
