@@ -2,6 +2,7 @@ vex.defaultOptions.className = 'vex-theme-os';
 
 var serverUrl = 'http://127.0.0.1:3000';
 var globalGroups = [];
+var globalGroupIds = [];
 var username = undefined;
 var test = null;
 
@@ -23,6 +24,7 @@ chrome.runtime.sendMessage({
       console.log(data[0]);
       for(var i = 0; i < data.length; i++) {
         globalGroups.push(data[i].groupname);
+        globalGroupIds.push(data[i].groupid);
       }
       console.log(globalGroups, 'globalGROUPS');
     },
