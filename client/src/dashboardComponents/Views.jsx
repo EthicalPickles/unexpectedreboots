@@ -63,9 +63,13 @@ class Views extends React.Component {
         <div className='container'>
           <Heading title={this.props.viewType} changeViewCb={this.props.changeViewCb} logoutCb={this.props.logoutCb} />        
           <UserPanel owner={this.props.owner} groupid={this.props.groupid} />
-          <MarkupPanel groupid={this.props.groupid} markups={[1, 2]} />
-          <SharedPanel groupid={this.props.groupid} sites={[1, 2, 3]} />
-          <LeaveGroupButton groupid={this.props.groupid} />
+          <div className='row'>
+            <MarkupPanel groupid={this.props.groupid} markups={[1, 2]} />
+            <SharedPanel groupid={this.props.groupid} sites={[1, 2, 3]} />
+          </div>
+          <div className='row'>
+            <LeaveGroupButton groupid={this.props.groupid} />
+          </div>
         </div>
       ); 
     }
