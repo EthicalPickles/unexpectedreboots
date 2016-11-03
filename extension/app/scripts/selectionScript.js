@@ -30,6 +30,11 @@ chrome.runtime.sendMessage({
   })
 });
 
+/***************************************************
+      GET MARKUPID AND CALL SENDCOMMENT
+        WITH MARKUPID AND COMMENT
+****************************************************/
+
 var addComment = function (markupid) {
   vex.dialog.open({
       message: 'Enter your comment',
@@ -52,6 +57,10 @@ var addComment = function (markupid) {
   })
 }
 
+/***************************************************
+    SEND COMMENT TO BACKGROUND.JS
+****************************************************/
+
 var sendComment = function (markupid, comment) {
   chrome.runtime.sendMessage({
     text: 'getUsername'
@@ -63,12 +72,15 @@ var sendComment = function (markupid, comment) {
       data: {username: username, markupid: markupid, comment: comment},
       success: (data) => {
         console.log(data, 'inside of Send Comment');
-        // console.log(globalGroups, 'globalGROUPS');
       },
     })
   });
 };
 
+/***************************************************
+      ADD MEDIUM-EDITOR TOOLBAR
+      TO THIS LIST OF HTML ELEMENTS
+****************************************************/
 
 var elements = document.querySelectorAll("p, li, em, span, h1, h2, h3, h4, h5, td, tr, th, tbody");
 
@@ -92,11 +104,9 @@ var postSelection = function(targetText, groups, comment) {
   });
 }
 
-
 /***************************************************
             MARKUP BUTTON FOR COMMENTS
 ****************************************************/
-
 
 $('body').delegate('button.medium-editor-action.medium-editor-button-last', 'click', function() {
   // addComment();
@@ -120,11 +130,9 @@ $('body').delegate('button.medium-editor-action.medium-editor-button-last', 'cli
   })
 });
 
-
 /***************************************************
           MARKUP BUTTON FOR SELECTING GROUPS
 ****************************************************/
-
 
 $('body').delegate('button.medium-editor-action.medium-editor-button-first', 'click', function() {
 
@@ -151,20 +159,9 @@ $('body').delegate('button.medium-editor-action.medium-editor-button-first', 'cl
   })
 });
 
-
-// $('body').append('<script> function onClickSelectionCb () {alert("this is working")}; </script>');
-
-$('<script>var onClickSelectionCb = function () {alert("this is working")}</' + 'script>').appendTo(document.head);
-
-// $('<h1> hello dude </h1>').appendTo('body');
-
-// $('.body').html('hello maaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaan');
-
-
 /***************************************************
               MARKUP TOOLBAR
 ****************************************************/
-
 
 editor = new MediumEditor(elements, {
   anchorPreview: false,
@@ -180,10 +177,6 @@ editor = new MediumEditor(elements, {
         end: '</span>',
         action: function(html, mark) {
           test = html;
-          // $('.testClass').click(function () {
-          //   alert('this is working bro');
-          // });
-          // postSelection(html);
           console.log('error');
           return html;
         }
@@ -209,6 +202,7 @@ editor = new MediumEditor(elements, {
       })
     }
 });
+
 editor.subscribe('editableInput', function (event, editable) {
     // Do some work
     console.log(event, 'event');
@@ -220,10 +214,6 @@ var colors = {0: '#EDE2AF', 1: '#E2BACB', 2: '#BECFE8', 3: '#F4CCB0', 4: '#BCE0B
 var userSet = {};
 var numbers = [0,1,2,3,4]
 
-
-var commentPost = function (id) {
-
-};
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   console.log(request, 'request');
