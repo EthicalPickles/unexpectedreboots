@@ -86,7 +86,6 @@ exports.getMarkups = function(username, callback) {
       'SELECT u2.username AS author, \
         s2.title AS title, \
         s2.url AS url, \
-        m.id AS markupid, \
         anchor, text, comment, temp.createdat \
       FROM ( \
         SELECT m.authorid AS authorid, \
