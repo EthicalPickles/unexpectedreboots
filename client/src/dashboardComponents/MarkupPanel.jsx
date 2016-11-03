@@ -22,7 +22,7 @@ class MarkupPanel extends React.Component {
       })
       .then(function(value) {
         context.setState({
-          markups: value.reverse();
+          markups: value.reverse()
         });
       }); 
     } else {
@@ -36,7 +36,7 @@ class MarkupPanel extends React.Component {
       })
       .then(function(value) {
         context.setState({
-          markups: value[0].reverse();
+          markups: value[0].reverse()
         });
       }); 
     }
