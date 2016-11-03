@@ -24,6 +24,9 @@ class Views extends React.Component {
               leaveGroup.close();
             //TODO: reroute to home page?
               console.log('Server removed you from group');
+              context.props.changeViewCb(null, 'home', null, null);
+              // console.log($('.heading > a'));
+              // $('.heading > a').click();
             } else {
             //get rid of the modal
               leaveGroup.close();

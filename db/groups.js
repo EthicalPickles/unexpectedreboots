@@ -238,6 +238,10 @@ exports.remove = function(groupID, username, callback) {
   function(err, rows) {
     err ? callback(err, null) : callback(null, true);
   });
+
+
+
+  // DELETE FROM groups WHERE id IN (SELECT id FROM (groups g INNER JOIN usersgroups ug ON ug.groupid != g.id));
 };
 
 
