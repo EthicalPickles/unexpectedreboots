@@ -79,7 +79,7 @@ class UserPanel extends React.Component {
           ); })
         }
         {function() {
-          if (context.state.users.length < 6 && context.props.owner) {
+          if (context.props.owner) {
             return (
               <div>
                 <AddUser />
