@@ -27,7 +27,18 @@ $('body').append(
   "<h1>Leave this group?</h1>"+
   "<form>"+
   "<br>"+
-  "<button data-remodal-action='confirm' class='remodal-confirm leave'>Leave</button>"+
+  "<button data-remodal-action='confirm' class='remodal-confirm exit'>Leave</button>"+
+  "<br>"+
+  "</form>"+
+"</div>"+
+
+//Ask to confirm you want to delete the group
+"<div class='remodal' data-remodal-id='group-delete-modal'>"+
+  "<button data-remodal-action='close' class='remodal-close'></button>"+
+  "<h1>Delete Group?</h1>"+
+  "<form>"+
+  "<br>"+
+  "<button data-remodal-action='confirm' class='remodal-confirm exit'>Delete</button>"+
   "<br>"+
   "</form>"+
 "</div>"+

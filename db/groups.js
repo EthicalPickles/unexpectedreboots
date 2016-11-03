@@ -222,8 +222,8 @@ exports.add = function(groupID, username, newMember, callback) {
   });
 };
 
-exports.remove = function(groupID, username, callback) {
-  console.log('/**', username, 'is leaving group:', groupID, '**/');
+exports.remove = function(owner, groupID, username, callback) {
+  console.log('/**', owner ? 'Owner' : '', username, 'is leaving group:', groupID, ' **/');
 
   pool.query({
     text: 'DELETE FROM usersgroups \
@@ -233,7 +233,11 @@ exports.remove = function(groupID, username, callback) {
   },
 
   function(err, rows) {
-    err ? callback(err, null) : callback(null, true);
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, true);
+    }
   });
 
 

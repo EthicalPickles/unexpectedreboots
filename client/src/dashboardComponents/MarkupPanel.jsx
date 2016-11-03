@@ -35,6 +35,7 @@ class MarkupPanel extends React.Component {
         return res.json();
       })
       .then(function(value) {
+        console.log('Setting markups', value);
         context.setState({
           markups: value[0].reverse()
         });

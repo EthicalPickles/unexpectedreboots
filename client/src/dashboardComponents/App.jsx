@@ -25,7 +25,7 @@ class App extends React.Component {
 
 
   logoutCb() {
-    document.cookies = '';
+    // document.cookies = '';
     window.close();
   }
 
