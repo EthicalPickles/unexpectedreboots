@@ -9,7 +9,7 @@ CREATE TABLE users (
 CREATE TABLE groups (
   id        BIGSERIAL   PRIMARY KEY,
   name      VARCHAR(32) NOT NULL,
-  owner     BIGSERIAL   references users(id),
+  owner     BIGSERIAL   references users(id) ON DELETE CASCADE,
   createdat TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
@@ -28,8 +28,8 @@ CREATE TABLE sites (
 
 CREATE TABLE markups (
   id        BIGSERIAL     PRIMARY KEY,
-  siteid    BIGSERIAL     references sites(id),
-  authorid  BIGSERIAL     references users(id),
+  siteid    BIGSERIAL     references sites(id) ON DELETE CASCADE,
+  authorid  BIGSERIAL     references users(id) ON DELETE CASCADE,
   anchor    VARCHAR(255),
   text      VARCHAR(2048) NOT NULL,
   comment   VARCHAR(2048),
@@ -37,15 +37,15 @@ CREATE TABLE markups (
 );
 
 CREATE TABLE markupsgroups (
-  markupid  BIGSERIAL references markups(id),
-  groupid   BIGSERIAL references groups(id),
+  markupid  BIGSERIAL references markups(id) ON DELETE CASCADE,
+  groupid   BIGSERIAL references groups(id) ON DELETE CASCADE,
   PRIMARY KEY (markupid, groupid)
 );
 
 CREATE TABLE sitesgroups (
-  groupid  BIGSERIAL   references groups(id),
-  siteid   BIGSERIAL   references sites(id),
-  sharedby BIGSERIAL   references users(id),
+  groupid  BIGSERIAL   references groups(id) ON DELETE CASCADE,
+  siteid   BIGSERIAL   references sites(id) ON DELETE CASCADE,
+  sharedby BIGSERIAL   references users(id) ON DELETE CASCADE,
   sharedat TIMESTAMPTZ NOT NULL DEFAULT now(),
   PRIMARY KEY (groupid, siteid, sharedat)
 );
@@ -53,8 +53,8 @@ CREATE TABLE sitesgroups (
 
 CREATE TABLE comments (
   id        BIGSERIAL     PRIMARY KEY,
-  markupid  BIGSERIAL     references markups(id),
-  authorid  BIGSERIAL     references users(id),
+  markupid  BIGSERIAL     references markups(id) ON DELETE CASCADE,
+  authorid  BIGSERIAL     references users(id) ON DELETE CASCADE,
   comment   VARCHAR(2048),
   createdat TIMESTAMPTZ   NOT NULL DEFAULT now()
 );

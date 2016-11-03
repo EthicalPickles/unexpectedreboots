@@ -3,25 +3,26 @@ class Views extends React.Component {
     super(props);
   }
 
-  handleGroupLeave() {
+  handleGroupExit() {
     var context = this;
     console.log('THIS', this);
 
     $(document).ready(function() {
       console.log('Attaching ajax to the button');
-      $('.leave').click(function() {
+      $('.exit').click(function() {
         $.ajax({
           url: SERVER_IP + ':3000/test/groups/edit',
           method: 'POST',
           data: {
             groupID: context.props.groupid,
+            owner: context.props.owner,
             username: getUsername()
           },
           success: function(data) {
             console.log('DATA', data);
             if (data === true) {
             //get rid of the modal
-              leaveGroup.close();
+              context.props.owner ? deleteGroup.close() : leaveGroup.close();
             //TODO: reroute to home page?
               console.log('Server removed you from group');
               context.props.changeViewCb(null, 'home', null, null);
@@ -29,7 +30,7 @@ class Views extends React.Component {
               // $('.heading > a').click();
             } else {
             //get rid of the modal
-              leaveGroup.close();
+              context.props.owner ? deleteGroup.close() : leaveGroup.close();
               console.log('Server couldn\'t edit groups!');
             } 
           }
@@ -43,7 +44,8 @@ class Views extends React.Component {
     console.log('Component did update!');
     if (this.props.viewType !== 'home') {
       console.log('Handling the group leave');
-      this.handleGroupLeave();
+      $('.exit').off();
+      this.handleGroupExit();
     }
   }
 
@@ -59,6 +61,8 @@ class Views extends React.Component {
     } else {
     //make this the callback to a get request for the user's group data and pass it into the three panels
     // but what if someone makes a group named 'home' ???
+      var leaveDelete = this.props.owner ? (<DeleteGroupButton owner={this.props.owner} groupid={this.props.groupid} />) : 
+                                           (<LeaveGroupButton owner={this.props.owner} groupid={this.props.groupid} />);
       return (
         <div className='container'>
           <Heading title={this.props.viewType} changeViewCb={this.props.changeViewCb} logoutCb={this.props.logoutCb} />        
@@ -68,7 +72,7 @@ class Views extends React.Component {
             <SharedPanel groupid={this.props.groupid} sites={[1, 2, 3]} />
           </div>
           <div className='row'>
-            <LeaveGroupButton groupid={this.props.groupid} />
+            {leaveDelete}
           </div>
         </div>
       ); 

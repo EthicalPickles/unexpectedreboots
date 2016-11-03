@@ -217,3 +217,19 @@ exports.share = function(url, title, username, anchor, text, comment, groupID, c
     }
   });
 };
+
+
+
+exports.deleteMarkup = function(markupid, callback) {
+  //first delete all the markupgroup entries
+  pool.query({
+    text: 'DELETE FROM markups WHERE id = ' + markupid + ';'
+  },
+  function(err, success) {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, true);
+    }
+  });
+}

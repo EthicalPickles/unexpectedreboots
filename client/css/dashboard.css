@@ -196,11 +196,11 @@ span {
   filter: brightness(75%);
 }
 
-.leave-bttn:hover {
+.exit-bttn:hover {
   filter: brightness(75%);
 }
 
-.leave-bttn {
+.exit-bttn {
   background: #bfbfbf;
   text-align: center;
   padding-top: 25px;

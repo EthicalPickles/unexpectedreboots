@@ -155,8 +155,9 @@ exports.editGroup = function(req, res) {
   // This endpoint should allow owners to remove members from a group
   var groupID = req.query.groupID || req.body.groupID;
   var username = req.query.username || req.body.username;
+  var owner = req.query.owner || req.body.owner;
 
-  groups.remove(groupID, username, function(err, success) {
+  groups.remove(owner, groupID, username, function(err, success) {
     err ? res.send(err) : res.send(success);
   });
 };
@@ -278,7 +279,11 @@ exports.shareMarkup = function(req, res) {
 };
 
 exports.deleteMarkup = function(req, res) {
+  const markupid = req.body.markupid;
 
+  markups.deleteMarkup(markupid, function(err, success) {
+    err ? res.status(501).send(err) : res.send(success);
+  });
 };
 
 
