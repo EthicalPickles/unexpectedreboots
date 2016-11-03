@@ -40,7 +40,7 @@ app.use('/api/groups/join', routes.joinGroup);
 app.use('/api/groups/users', sessionChecker, routes.getGroupMembers);
 app.use('/api/groups/markups', sessionChecker, routes.getGroupMarkups);
 app.use('/api/groups/sites', sessionChecker, routes.getGroupSites);
-// TODO
+// TODO 
 app.use('/api/groups/edit', sessionChecker, routes.editGroup);
 
 // `/api/websites/*` endpoints
@@ -61,6 +61,7 @@ app.use('/test/groups/create', routes.createGroup);
 app.use('/test/groups/add', routes.addMember);
 app.use('/test/users/groups', routes.getUserGroups);
 app.use('/test/groups/users', routes.getGroupMembers);
+app.use('/test/groups/edit', routes.editGroup);
 app.use('/test/websites/create', routes.createSite);
 app.use('/test/websites/share', routes.shareSite);
 app.use('/test/markups/create', routes.createMarkup);

@@ -15,13 +15,14 @@ class LeaveGroupButton extends React.Component {
 
       $('.leave').click(function() {
         $.ajax({
-          url: SERVER_IP + ':3000/api/groups/edit',
+          url: SERVER_IP + ':3000/test/groups/edit',
           method: 'POST',
           data: {
             groupID: context.props.groupid,
             username: getUsername()
           },
           success: function(data) {
+            console.log('DATA', data);
             if (data === true) {
             //get rid of the modal
               leaveGroup.close();
