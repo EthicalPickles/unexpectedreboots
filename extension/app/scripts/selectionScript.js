@@ -1,6 +1,6 @@
 vex.defaultOptions.className = 'vex-theme-os';
 
-var serverUrl = 'http://162.243.154.104:3000';
+var serverUrl;
 var globalGroups = [];
 var globalGroupIds = [];
 var username = undefined;
@@ -16,6 +16,7 @@ chrome.runtime.sendMessage({
 }, function(response) {
   console.log(response.username);
   username = response.username;
+  serverUrl = response.destUrl;
   $.ajax({
     type: 'GET',
     url: serverUrl + '/test/users/groups',
@@ -67,6 +68,7 @@ var sendComment = function (markupid, comment) {
     text: 'getUsername'
   }, function(response) {
     username = response.username;
+    serverUrl = response.destUrl;
     $.ajax({
       type: 'POST',
       url: serverUrl + '/test/comments/create',
