@@ -1,3 +1,5 @@
 node_modules
 client/compiled
 server/creds
+config.js
+env.js
