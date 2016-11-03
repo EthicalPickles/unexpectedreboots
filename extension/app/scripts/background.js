@@ -13,6 +13,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
         success: function(response) {
           console.log('Got user markups!', response);
           for (var i = 0; i < response.length; i++) {
+            // if (response[i].markupid) {
+            //   alert(response[i]);
+            // }
+            // alert(response[i]);
             if (tabUrl === response[i].url) {
               userMarkups.push(response[i]);
             }
@@ -73,6 +77,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       url = tabs[0].url;
       title = tabs[0].title;
+
     //need url, title, and text
       $.ajax({
         type: "POST",
@@ -89,6 +94,38 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           // alert('success');
         }
       });
+
+      $.ajax({
+        type: "POST",
+        url: destUrl + '/test/comments/create',
+        data: {
+          username: username,
+          comment: request.comment,
+          markupid: 99
+        },
+        success: function(data) {
+          // console.log('success');
+          alert('success');
+          $.ajax({
+            type: 'GET',
+            url: destUrl + '/test/users/markups',
+            data: {username: username},
+            success: function(response) {
+              alert(response);
+              console.log('Got user markups!', response);
+              for (var i = 0; i < response.length; i++) {
+                if (response[i].markupid) {
+                  alert(response[i].markupid);
+                }
+                alert(response[i]);
+              }
+            }
+          });
+        }
+      });
+
+
+
       $.ajax({
         type: 'GET',
         url: destUrl + '/test/users/groups',

@@ -16,7 +16,7 @@ exports.insert = function(username, email, password, callback) {
   pool.query({
     text: 'SELECT username FROM users \
       WHERE username = \'' + username + '\';'
-  }, 
+  },
 
   function(err, rows) {
     if (rows.rowCount > 0) {
@@ -68,7 +68,7 @@ exports.getGroups = function(username, callback) {
         SELECT u.id FROM users u \
         WHERE u.username = \'' + username + '\' \
       );'
-  }, 
+  },
 
   function(err, rows) {
     if (err) {
@@ -86,6 +86,7 @@ exports.getMarkups = function(username, callback) {
       'SELECT u2.username AS author, \
         s2.title AS title, \
         s2.url AS url, \
+        m.id AS markupid, \
         anchor, text, comment, temp.createdat \
       FROM ( \
         SELECT m.authorid AS authorid, \
