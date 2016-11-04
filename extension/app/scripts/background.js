@@ -20,48 +20,35 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
           if (userMarkups.length) {
             chrome.tabs.sendMessage(tab, {selection: userMarkups});
           }
-          //get all groups for a user
-          $.ajax({
-            type: 'GET',
-            url: destUrl + '/test/users/groups',
-            data: {username: username},
-            success: function(response) {
-              //alert('/api/users/groups response: ' + response.toString());
-              var groups = [];
-              for(var i = 0; i < response.length; i++) {
-                groups.push(response[i].groupid);
-              }
-              //get all messages from groups
-              for(var j = 0; j < groups.length; j++) {
-                $.ajax({
-                  type: 'GET',
-                  url: destUrl + '/test/groups/markups',
-                  data: {groupID: groups[j]},
-                  success: function(response) {
-                    var shareGroups = localStorage.getItem('groupsToShareWith');
-                    if(shareGroups === null) {
-                      shareGroups = {};
-                    } else {
-                      shareGroups = JSON.parse(shareGroups);
-                    }
 
-                    var groupMarkups = [];
-                    if(shareGroups[response[1]]) {
-                      for (var x = 0; x < response[0].length; x++) {
-                        if (tabUrl === response[0][x].url) {
-                          groupMarkups.push(response[0][x]);
-                        }
-                      }
+          var shareGroups = localStorage.getItem('groupsToShareWith');
+          if(shareGroups === null) {
+            shareGroups = {};
+          } else {
+            shareGroups = JSON.parse(shareGroups);
+          }
 
-                      if (groupMarkups.length) {
-                      chrome.tabs.sendMessage(tab, {selection: groupMarkups});
-                      }
+          for(groupID in shareGroups) {
+            if(shareGroups[groupID] === true) {
+              $.ajax({
+                type: 'GET',
+                url: destUrl + '/test/groups/markups',
+                data: {groupID: groupID},
+                success: function(response) {
+                  var groupMarkups = [];
+                  for (var x = 0; x < response[0].length; x++) {
+                    if (tabUrl === response[0][x].url) {
+                      groupMarkups.push(response[0][x]);
                     }
                   }
-                })
-              };
+
+                  if (groupMarkups.length) {
+                  chrome.tabs.sendMessage(tab, {selection: groupMarkups});
+                  }
+                }
+              })
             }
-          })
+          }
         }
       });
     }
