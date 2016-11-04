@@ -16,17 +16,21 @@ var test = null;
 
 var getComments = function (markupid) {
   console.log('this is being logged', markupid);
-  $.ajax({
-    type: 'POST',
-    url: serverUrl + '/test/comments/get',
-    data: {markupid: markupid, groupids: groupsSelected},
-    success: (data) => {
-      console.log(data, 'inside of get comments selection script!!!');
-    },
-    error: (f) => {
-      console.error(f, 'here');
-    }
-  })
+  if (markupid) {
+    $.ajax({
+      type: 'POST',
+      url: serverUrl + '/test/comments/get',
+      data: {markupid: markupid, groupids: groupsSelected},
+      success: (data) => {
+        if (data.length > 0) {
+          console.log(data, 'inside of get comments selection script!!!');
+        }
+      },
+      error: (f) => {
+        console.error(f, 'here');
+      }
+    })
+  }
 };
 
 
@@ -47,6 +51,8 @@ chrome.runtime.sendMessage({
   for (var key in groupsObj) {
     groupsSelected.push(key);
   }
+
+  console.log(groupsSelected);
 
   console.log(markupIds, 'markupIDS', groupsSelected);
 
@@ -286,10 +292,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   for (var i = 0; i < allSelections.length; i++) {
     if (!userSet[allSelections[i].author]) {
       userSet[allSelections[i].author] = numbers.splice(0,1);
+      console.log('userSet[allSelections[i].author]', userSet[allSelections[i].author]);
     }
     var importedSelection = JSON.parse(allSelections[i].anchor);
-    markupIds.push(allSelections[i].markupid);
-    var markupId = JSON.parse(allSelections[i].markupid);
+    var markupId;
+
+    if (allSelections[i].markupid) {
+      markupId = JSON.parse(allSelections[i].markupid);
+      markupIds.push(markupId);
+    }
+
+    console.log(allSelections[i], 'allSelectionsFrank');
 
     editor.importSelection(importedSelection);
 
@@ -338,7 +351,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     $('#markupid_' + markupId).click(function () {
       // if (!flag) {
         console.log('inside of markup thing');
-        addComment(markupId);
+        if (markupId) {
+          addComment(markupId);
+        }
         // flag = true;
       // }
       // getComments(markupId);
