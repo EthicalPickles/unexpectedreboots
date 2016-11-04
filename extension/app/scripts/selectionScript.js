@@ -162,61 +162,6 @@ var postSelection = function(targetText, groups, comment) {
 }
 
 /***************************************************
-            MARKUP BUTTON FOR COMMENTS
-****************************************************/
-
-$('body').delegate('button.medium-editor-action.medium-editor-button-last', 'click', function() {
-  // addComment();
-  vex.dialog.open({
-      message: 'Enter your comment',
-      input: [
-          '<input name="comment" type="text" autocomplete="off" required />'
-      ].join(''),
-      buttons: [
-          $.extend({}, vex.dialog.buttons.YES, { text: 'Enter' }),
-          $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
-      ],
-      callback: function (data) {
-          if (!data) {
-              console.log('Cancelled');
-          } else {
-              console.log('Comment', data.comment);
-              postSelection(test, null, data.comment);
-          }
-      }
-  })
-});
-
-/***************************************************
-          MARKUP BUTTON FOR SELECTING GROUPS
-****************************************************/
-
-$('body').delegate('button.medium-editor-action.medium-editor-button-first', 'click', function() {
-
-  var groupCheckBox = [];
-  globalGroups.forEach(function (group, index) {
-    groupCheckBox.push('<label><input name="selectGroups" type="checkbox" value="' + (index + 1) + '">' + group + '</label><br>');
-  });
-
-  vex.dialog.open({
-      message: 'Select all that apply',
-      input: groupCheckBox.join(''),
-      buttons: [
-          $.extend({}, vex.dialog.buttons.YES, { text: 'Enter' }),
-          $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
-      ],
-      callback: function (data) {
-          if (!data) {
-              console.log('Cancelled');
-          } else {
-              postSelection(test, data.selectGroups);
-              console.log('success', data.selectGroups);
-          }
-      }
-  })
-});
-
-/***************************************************
               MARKUP TOOLBAR
 ****************************************************/
 
@@ -225,33 +170,15 @@ editor = new MediumEditor(elements, {
   placeholder: false,
   disableEditing: true,
   toolbar: {
-    buttons: ['sendToSelect', 'sendSelection', 'sendWithComments']
+    buttons: ['sendSelection']
   },
   extensions: {
-      'sendToSelect': new MediumButton({
-        label: 'Share With Select',
-        start: '<span style="background-color: powderblue;">',
-        end: '</span>',
-        action: function(html, mark) {
-          test = html;
-          return html;
-        }
-      }),
       'sendSelection': new MediumButton({
-        label: 'Share with All',
+        label: 'Share',
         start: '<span style="background-color: powderblue;">',
         end: '</span>',
         action: function(html, mark) {
           postSelection(html);
-          return html;
-        }
-      }),
-      'sendWithComments': new MediumButton({
-        label: 'Share and Add Comment',
-        start: '<span style="background-color: powderblue;">',
-        end: '</span>',
-        action: function(html, mark) {
-          test = html;
           return html;
         }
       })

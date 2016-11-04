@@ -57,7 +57,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   var username = localStorage.getItem('username');
-  var shareGroups = localStorage.getItem('groupsToShareWith');
   var destUrl = localStorage.getItem('destUrl');
 
   if (request.text === 'getUsername') {
@@ -84,88 +83,38 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           comment: null
         },
         success: function(data) {
-          alert(JSON.stringify(data));
-          // alert('success');
-          // alert(data[0]);
-          $.ajax({
-            type: 'GET',
-            url: destUrl + '/test/users/groups',
-            data: {username: username},
-            success: function(response) {
-              var shareGroups = localStorage.getItem('groupsToShareWith');
-              if(shareGroups === null) {
-                shareGroups = {};
-              } else {
-                shareGroups = JSON.parse(shareGroups);
-              }
-              var postGroups = [];
-              if(Array.isArray(response)){
-                for(var i = 0; i < response.length; i++) {
-                  // var temp = response[i].groupid;
-                  if(shareGroups[response[i].groupid]) {
-                    if (!postGroups.includes(response[i].groupid)) {
-                      postGroups.push(response[i].groupid);
-                    }
-                  }
+          var shareGroups = localStorage.getItem('groupsToShareWith');
+          if(shareGroups === null) {
+            shareGroups = {};
+          } else {
+            shareGroups = JSON.parse(shareGroups);
+          }
+
+          for(groupID in shareGroups) {
+            if(shareGroups[groupID] === true) {
+              $.ajax({
+                type: 'POST',
+                url: destUrl + '/test/markups/share',
+                data: {
+                  username: username,
+                  anchor: selection,
+                  url: url,
+                  title: title,
+                  text: request.text,
+                  comment: null,
+                  groupID: groupID,
+                  markupID: data.id
+                },
+                success: function() {
+                },
+                error: function(obj,string,other) {
+                 
                 }
-                for (var j = 0; j < postGroups.length; j++) {
-                  $.ajax({
-                    type: 'POST',
-                    url: destUrl + '/test/markups/share',
-                    data: {
-                      username: username,
-                      anchor: selection,
-                      url: url,
-                      title: title,
-                      text: request.text,
-                      comment: null,
-                      groupID: postGroups[j],
-                      markupID: data.id
-                    },
-                    success: function() {
-                    },
-                    error: function(obj,string,other) {
-                      // alert(obj + string + other)
-                    }
-                  });
-                }
-              }
+              });
             }
-          });
+          }
         }
       });
-
-      $.ajax({
-        type: "POST",
-        url: destUrl + '/test/comments/create',
-        data: {
-          username: username,
-          comment: request.comment,
-          markupid: 99
-        },
-        success: function(data) {
-          // console.log('success');
-          // alert('success');
-          $.ajax({
-            type: 'GET',
-            url: destUrl + '/test/users/markups',
-            data: {username: username},
-            success: function(response) {
-              console.log('Got user markups!', response);
-              for (var i = 0; i < response.length; i++) {
-                if (response[i].markupid) {
-                  // alert(response[i].markupid);
-                }
-                // alert(response[i]);
-              }
-            }
-          });
-        }
-      });
-
-
-
-
     });
   }
 })
