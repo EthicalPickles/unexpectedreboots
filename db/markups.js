@@ -83,12 +83,13 @@ exports.create = function(url, title, username, anchor, text, comment, callback)
                   pool.query({
                     // insert into markups
                     text: 'INSERT INTO markups(siteid, authorid, anchor, text, comment) \
-                      VALUES($1, $2, $3, $4, $5)', 
+                      VALUES($1, $2, $3, $4, $5) \
+                      RETURNING *', 
                     values: [siteID, authorID, anchor, text, comment]
                   },
 
                   function(err5, rows5) {
-                    err5 ? callback(err5, null) : callback(null, true);
+                    err5 ? callback(err5, null) : callback(null, rows5.rows[0]);
                   });
                 }
               })
@@ -119,6 +120,7 @@ exports.lookupMarkupById = function(markupid, callback) {
 
 
 var creatMarkupGroup = function(markupid, groupid, callback) {
+  console.log('/** CREATING MARKUPGROUP markupid', markupid, ' groupid', groupid, ' **/');
   pool.query({
     // insert shared markup into markupsgroups
     text: 'INSERT INTO markupsgroups(markupid, groupid) \
@@ -126,6 +128,8 @@ var creatMarkupGroup = function(markupid, groupid, callback) {
       values: [markupid, groupid]
   },
   function(err, rows) {
+    console.log('ERR', err);
+    console.log('ROWS', rows);
     err ? callback(err, null) : callback(null, rows.rows[0]);
   });
 };

@@ -253,7 +253,7 @@ exports.createMarkup = function(req, res) {
 };
 
 exports.shareMarkup = function(req, res) {
-  const markupID = req.body.groupID;
+  const markupID = req.body.markupID;
   const groupID = req.body.groupID;
 
   markups.share(markupID, groupID, function(err, success) {
