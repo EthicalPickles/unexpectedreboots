@@ -256,12 +256,10 @@ exports.remove = function(owner, groupID, username, callback) {
             callback(err3, null);
             return;
           }
-          
+
           callback(null, true);
         });
       });
-    }
-
     }
   });
 
