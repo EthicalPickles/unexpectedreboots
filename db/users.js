@@ -54,7 +54,7 @@ exports.update = function(username, password, newPassword, email, newEmail, call
 
 
 exports.getGroups = function(username, callback) {
-
+  console.log('GETTING GROUPS for ', username);
   pool.query({
     // find all groups user is a part of (and their owners)
     text: 'SELECT u.id AS userid, g.id AS groupid, g.name AS groupname, \
@@ -80,7 +80,7 @@ exports.getGroups = function(username, callback) {
 };
 
 exports.getMarkups = function(username, callback) {
-  console.log('GETTING MARKUPS for ' + username);
+  console.log('GETTING MARKUPS for', username);
   pool.query({
     text:
       'SELECT u2.username AS author, \

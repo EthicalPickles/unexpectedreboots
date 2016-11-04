@@ -11,7 +11,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
         url: destUrl + '/test/users/markups',
         data: {username: username},
         success: function(response) {
-          console.log('Got user markups!', response);
           for (var i = 0; i < response.length; i++) {
             if (tabUrl === response[i].url) {
               userMarkups.push(response[i]);
@@ -23,11 +22,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
           //get all groups for a user
           $.ajax({
             type: 'GET',
-            url: destUrl + '/api/users/groups',
+            url: destUrl + '/test/users/groups',
             data: {username: username},
             success: function(response) {
-              // alert('called api/users/groups');
-              console.log('Got groups!', response);
+              //alert('/api/users/groups response: ' + response.toString());
               var groups = [];
               for(var i = 0; i < response.length; i++) {
                 groups.push(response[i].groupid);
@@ -75,7 +73,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   var destUrl = localStorage.getItem('destUrl');
 
   if (request.text === 'getUsername') {
-    sendResponse({username: username, groups: shareGroups});
+    sendResponse({username: username, groups: shareGroups, destUrl: destUrl});
   } else if (username) {
     var selection = request.selection;
     var url = '';

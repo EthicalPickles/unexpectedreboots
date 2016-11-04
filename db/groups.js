@@ -235,8 +235,31 @@ exports.remove = function(owner, groupID, username, callback) {
   function(err, rows) {
     if (err) {
       callback(err, null);
-    } else {
-      callback(null, true);
+      return;
+    }
+
+    if (owner) {
+      pool.query({
+        text: 'DELETE FROM usersgroups \
+               WHERE usersgroups.groupid = \'' + groupID + '\''
+      }, function(err2, rows2) {
+        if (err) {
+          callback(err2, null);
+          return;
+        }
+
+        pool.query({
+          text: 'DELETE FROM groups \
+                 WHERE groups.id = \'' + groupID + '\''
+        }, function(err3, rows3) {
+          if (err) {
+            callback(err3, null);
+            return;
+          }
+
+          callback(null, true);
+        });
+      });
     }
   });
 
@@ -343,3 +366,20 @@ pool.query({text:
   }
   );
 };
+
+
+
+exports.getGroupById = function(groupid, callback) {
+  pool.query({text:
+  'SELECT * from groups WHERE id = ' + groupid + ';'
+  },
+  function(err, rows) {
+    if(err) {
+      callback(err, null);
+    } else if (rows.rowCount === 0) {
+      callback('Cannot find group of id ' + groupid);
+    } else {
+      callback(null, rows.rows[0]);
+    }
+  });
+}

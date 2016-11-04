@@ -218,3 +218,9 @@ span {
   margin: 35px 0px 20px 3%;
   width: 22%;
 }
+
+.author-label {
+  font-size: 0.60em;
+  color: grey;
+
+}

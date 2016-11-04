@@ -55,7 +55,7 @@ chrome.runtime.sendMessage({
     url: serverUrl + '/test/users/groups',
     data: {username: username},
     success: (data) => {
-      console.log(data[0]);
+      console.log(data);
       for(var i = 0; i < data.length; i++) {
         globalGroups.push(data[i].groupname);
         globalGroupIds.push(data[i].groupid);
