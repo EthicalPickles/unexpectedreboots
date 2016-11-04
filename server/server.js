@@ -49,8 +49,7 @@ app.use('/api/websites/share', sessionChecker, routes.shareSite);
 // TODO
 app.use('/api/websites/delete', sessionChecker, routes.deleteSite);
 
-// `/api/markups/*` endpoints
-app.use('/api/markups/create', sessionChecker, routes.createMarkup);
+// `/api/markups/*` endpoints\
 app.use('/api/markups/share', sessionChecker, routes.shareMarkup);
 app.use('/api/markups/delete', sessionChecker, routes.deleteMarkup);
 
@@ -61,10 +60,10 @@ app.use('/test/groups/create', routes.createGroup);
 app.use('/test/groups/add', routes.addMember);
 app.use('/test/users/groups', routes.getUserGroups);
 app.use('/test/groups/users', routes.getGroupMembers);
-app.use('/test/groups/edit', routes.editGroup);
+app.use('/test/groups/edit', routes.editGroup);;
+app.use('/test/groups/delete', routes.deleteGroup);
 app.use('/test/websites/create', routes.createSite);
 app.use('/test/websites/share', routes.shareSite);
-app.use('/test/markups/create', routes.createMarkup);
 app.use('/test/markups/share', routes.shareMarkup);
 app.use('/test/users/markups', routes.getUserMarkups);
 app.use('/test/groups/markups', routes.getGroupMarkups);

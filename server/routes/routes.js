@@ -184,6 +184,13 @@ exports.getAllGroups = function(req, res) {
   });
 };
 
+exports.deleteGroup = function(req, res) {
+  const groupid = req.body.groupid;
+  groups.deleteGroup(function(err, success) {
+    err ? res.status(501).send(err) : res.send(success);
+  });
+};
+
 
 /***************************************************
   `/API/WEBSITES/*` ENDPOINTS

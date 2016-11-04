@@ -1,7 +1,7 @@
 var pg = require('pg');
 var Pool = require('pg').Pool;
 var CONNECTION = 'postgres://admin:rQUNyC8W9YT7ZZBW@localhost:5432/markable';
-var Promise = require("bluebird");
+var users = require('./users');
 
 var client = new pg.Client(CONNECTION);
 
@@ -44,21 +44,6 @@ var createComment = function(markupid, authorid, comment, callback) {
       callback(err, null);
     } else {
       callback(null, rows.rows)
-    }
-  });
-};
-
-var getUserFromName = function(username, callback) {
-  console.log('in get username!!!!!!!!!');
-  pool.query({
-    text: 'SELECT * FROM users u WHERE u.username = \'' + username + '\' ;'
-  }, function(err, rows) {
-    if(err) {
-      callback(err, null);
-    } else if (rows.rowCount === 1) {
-      callback(null, rows.rows[0]);
-    } else {
-      callback('User ' + username + ' not found!', null);
     }
   });
 };
@@ -120,7 +105,7 @@ var checkGroupMarkupExists = function(markupid, groupid, callback) {
 exports.setComment = function(markupid, username, comment, callback) {
   console.log('in set comment', comment);
   //first get userid
-  getUserFromName(username, function(err, user) {
+  users.getUserByName(username, function(err, user) {
     console.log('error', err, 'user!!!!!!!', user, 'USERNAME', user.username, user.id);
     if(err) {
       callback(err, null);

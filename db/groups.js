@@ -343,3 +343,13 @@ pool.query({text:
   }
   );
 };
+
+
+exports.deleteGroup = function(groupid, callback) {
+  pool.query({
+    text: 'DELETE FROM groups WHERE id = ' + groupid + ';'
+  },
+  function(err, success) {
+    err ? callback(err, null) : callback(null, true);
+  });
+};

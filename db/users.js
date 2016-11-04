@@ -11,6 +11,25 @@ var CONFIG = {
 
 var pool = new Pool(CONFIG);
 
+
+
+
+exports.getUserByName = function(username, callback) {
+  console.log('in get username!!!!!!!!!');
+  pool.query({
+    text: 'SELECT * FROM users u WHERE u.username = \'' + username + '\' ;'
+  }, function(err, rows) {
+    if(err) {
+      callback(err, null);
+    } else if (rows.rowCount === 1) {
+      callback(null, rows.rows[0]);
+    } else {
+      callback('User ' + username + ' not found!', null);
+    }
+  });
+};
+
+
 exports.insert = function(username, email, password, callback) {
 
   pool.query({

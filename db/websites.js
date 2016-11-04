@@ -11,6 +11,51 @@ var CONFIG = {
 
 var pool = new Pool(CONFIG);
 
+
+exports.getExistingSite = function(url, title, callback) {
+  pool.query({
+    // check if website already exists
+    text: 'SELECT * FROM sites \
+      WHERE url = \'' + url + '\' \
+      AND title = \'' + title + '\''
+  },
+  function(err, rows) {
+    if(err) {
+      callback(err, null);
+    } else {
+      callback(null, rows.rows[0]);
+    }
+  });
+};
+
+exports.createNewSite = function(url, title, callback) {
+  pool.query({
+    text: 'INSERT INTO sites(url, title) \
+      VALUES($1, $2)',
+    values: [url, title]
+  },
+  function(err, rows) {
+    err ? callback(err, null) : callback(true, rows.rows[0]);
+  });
+}
+
+
+exports.retrieveSite = function(url, title, callback) {
+  exports.getExistingSite(url, title, function(err, site) {
+    if(err) {
+      callback(err, null);
+    } else {
+      if(exists) {
+        callback(null, site);
+      } else {
+        exports.createNewSite(url, title, callback);
+      }
+    }
+  });
+};
+
+
+///old code
 exports.create = function(url, title, callback) {
 
   pool.query({
