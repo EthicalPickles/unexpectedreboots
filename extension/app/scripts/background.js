@@ -71,9 +71,11 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   var username = localStorage.getItem('username');
+  var shareGroups = localStorage.getItem('groupsToShareWith');
   var destUrl = localStorage.getItem('destUrl');
+
   if (request.text === 'getUsername') {
-    sendResponse({username: username, destUrl:destUrl});
+    sendResponse({username: username, groups: shareGroups});
   } else if (username) {
     var selection = request.selection;
     var url = '';

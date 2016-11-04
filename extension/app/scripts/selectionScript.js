@@ -3,8 +3,32 @@ vex.defaultOptions.className = 'vex-theme-os';
 var serverUrl;
 var globalGroups = [];
 var globalGroupIds = [];
+var markupIds = [];
 var username = undefined;
+var groupsSelected = [];
+var groupsObj = {};
 var test = null;
+
+
+/***************************************************
+    GET COMMENTS TO BACKGROUND.JS
+****************************************************/
+
+var getComments = function (markupid) {
+  console.log('this is being logged', markupid);
+  $.ajax({
+    type: 'POST',
+    url: serverUrl + '/test/comments/get',
+    data: {markupid: markupid, groupids: groupsSelected},
+    success: (data) => {
+      console.log(data, 'inside of get comments selection script!!!');
+    },
+    error: (f) => {
+      console.error(f, 'here');
+    }
+  })
+};
+
 
 /***************************************************
     GET USERNAME FROM LOCAL STORAGE
@@ -14,9 +38,18 @@ var test = null;
 chrome.runtime.sendMessage({
   text: 'getUsername'
 }, function(response) {
-  console.log(response.username);
+
   username = response.username;
   serverUrl = response.destUrl;
+
+  groupsObj = JSON.parse(response.groups);
+
+  for (var key in groupsObj) {
+    groupsSelected.push(key);
+  }
+
+  console.log(markupIds, 'markupIDS', groupsSelected);
+
   $.ajax({
     type: 'GET',
     url: serverUrl + '/test/users/groups',
@@ -27,10 +60,11 @@ chrome.runtime.sendMessage({
         globalGroups.push(data[i].groupname);
         globalGroupIds.push(data[i].groupid);
       }
-      console.log(globalGroups, 'globalGROUPS');
+      markupIds.forEach((id) => getComments(id));
     },
   })
 });
+
 
 /***************************************************
       GET MARKUPID AND CALL SENDCOMMENT
@@ -79,6 +113,32 @@ var sendComment = function (markupid, comment) {
     })
   });
 };
+
+/***************************************************
+    GET COMMENTS FROM BACKGROUND.JS
+****************************************************/
+
+
+// var getComments = function (markupid) {
+//   console.log('inside of get comments but not success!!!', globalGroupIds, markupid);
+//   chrome.runtime.sendMessage({
+//     text: 'getUsernameee'
+//   }, function(response) {
+//     $.ajax({
+//         type: 'POST',
+//         url: serverUrl + '/test/comments/get',
+//         data: {markupid: markupid, groupids: globalGroupIds},
+//         success: (data) => {
+//           console.log(data, 'inside of get comments selection script!!!');
+//         },
+//         error: (f) => {
+//           console.error(f, 'here');
+//         }
+//       })
+//   });
+// };
+
+
 
 /***************************************************
       ADD MEDIUM-EDITOR TOOLBAR
@@ -186,7 +246,7 @@ editor = new MediumEditor(elements, {
       }),
       'sendSelection': new MediumButton({
         label: 'Share with All',
-        start: '<span onclick="onClickSelectionCb" style="background-color: powderblue;">',
+        start: '<span style="background-color: powderblue;">',
         end: '</span>',
         action: function(html, mark) {
           postSelection(html);
@@ -195,7 +255,7 @@ editor = new MediumEditor(elements, {
       }),
       'sendWithComments': new MediumButton({
         label: 'Share and Add Comment',
-        start: '<span onclick="onClickSelectionCb" style="background-color: powderblue;">',
+        start: '<span style="background-color: powderblue;">',
         end: '</span>',
         action: function(html, mark) {
           test = html;
@@ -228,6 +288,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       userSet[allSelections[i].author] = numbers.splice(0,1);
     }
     var importedSelection = JSON.parse(allSelections[i].anchor);
+    markupIds.push(allSelections[i].markupid);
     var markupId = JSON.parse(allSelections[i].markupid);
 
     editor.importSelection(importedSelection);
@@ -271,11 +332,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       sel.removeAllRanges();
       sel.addRange(range);
     }
+
+    // getComments(markupId);
+
     $('#markupid_' + markupId).click(function () {
-      if (!flag) {
+      // if (!flag) {
+        console.log('inside of markup thing');
         addComment(markupId);
-        flag = true;
-      }
+        // flag = true;
+      // }
+      // getComments(markupId);
     });
   }
 });

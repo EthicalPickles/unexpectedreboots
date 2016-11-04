@@ -300,9 +300,17 @@ exports.createComment = function(req, res) {
 
 
 exports.getComments = function(req, res) {
+  console.log('in get Comments', req.body);
+
   const markupid = req.body.markupid;
   const groupids = req.body.groupids;
+  var flag = false;
   comments.getComments(markupid, groupids, function(err, success) {
+    console.log('callback twice??????');
+    if (flag) {
+      return;
+    }
     err ? res.status(404).send(err) : res.send(success);
+    flag = true;
   });
 };
