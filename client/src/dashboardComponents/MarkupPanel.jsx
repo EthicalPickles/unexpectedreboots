@@ -52,9 +52,10 @@ class MarkupPanel extends React.Component {
       <div className='container col-sm-6 panel'>
         <div className='panel-title'>Markup Panel</div>
           { this.state.markups.map(function(markup) { //change to the makkups held in 'state'
+            console.log(markup);
             return (
              <div className='entry'>
-                <MarkupEntry title={markup.title} url={markup.url} author={markup.author} />
+                <MarkupEntry markup={markup} />
               </div>
             );
           })
