@@ -58,6 +58,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   var username = localStorage.getItem('username');
   var destUrl = localStorage.getItem('destUrl');
+  var shareGroups = localStorage.getItem('groupsToShareWith');
 
   if (request.text === 'getUsername') {
     sendResponse({username: username, groups: shareGroups, destUrl: destUrl});
@@ -108,7 +109,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 success: function() {
                 },
                 error: function(obj,string,other) {
-                 
+
                 }
               });
             }
