@@ -305,14 +305,15 @@ exports.getMarkups = function(groupID, callback) {
       'SELECT u2.username AS author, \
         s2.title AS title, \
         s2.url AS url, \
-        anchor, text, comment, temp.createdat \
+        anchor, text, comment, temp.createdat, markupid \
       FROM ( \
         SELECT m.authorid AS authorid, \
           m.siteid AS siteid, \
           m.anchor AS anchor, \
           m.text AS text, \
           m.comment AS comment, \
-          m.createdat AS createdat \
+          m.createdat AS createdat, \
+	  m.id AS markupid \
         FROM markups m \
         WHERE m.id IN ( \
           SELECT mg.markupid FROM markupsgroups mg \

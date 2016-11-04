@@ -57,6 +57,7 @@ GRANT ALL ON sites TO postgres;
 GRANT ALL ON sitesgroups TO postgres;
 GRANT ALL ON users TO postgres;
 GRANT ALL ON usersgroups TO postgres;
+GRANT ALL ON comments TO postgres;
 ```
 >Superuser incase of stuff
 ```sh

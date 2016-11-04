@@ -121,11 +121,11 @@ exports.setComment = function(markupid, username, comment, callback) {
   console.log('in set comment', comment);
   //first get userid
   getUserFromName(username, function(err, user) {
-    console.log('error', err, 'user!!!!!!!', user, 'USERNAME', user.username, user.id);
     if(err) {
       callback(err, null);
     } else {
       const authorid = user.id;
+      console.log('Set comment for user ' + username + ' markupid ' + markupid);
       checkCommentExists(markupid, authorid, function(err, exists) {
         console.log('check comment exists', exists);
         //if exists, update
@@ -149,29 +149,29 @@ exports.getComments = function(markupid, groupids, callback) {
     if(err) {
       //found error
       callback(err, null);
-    } else if (!comments) {
+    } else if (!comments || comments.length === 0) {
       //if no comments found, send empty array back
       callback(null, []);
     } else {
       var foundAny = false;
+      var counter = 0;
       groupids.forEach((groupid) => {
-        //quit if we are done
-        if (foundAny) {
-          return;
-        }
+        console.log(comments, 'comments', groupid, 'GROUPID----- RIGHT HERE FRANK');
+
         //now check if the markup is part of any of the groups we are using
-        checkGroupMarkupExists(markupid, groupid, (err, exists) => {
+        checkGroupMarkupExists(markupid, parseInt(groupid), (err, exists) => {
           //no error callback because we can check other groups
           if (!err && exists && !foundAny) {
-            console.log('anything!!!!!!!!!');
+            console.log('anything!!!!!!!!!!@#$%^&*', comments[0]);
             callback(null, comments);
             foundAny = true;
-            return;
+          }
+          counter ++;
+          if(counter === groupids.length && !foundAny) {
+            callback(null, []);
           }
         });
       });
-      //markup not in our group so move send back empty array;
-      callback(null, []);
     }
   });
 };
