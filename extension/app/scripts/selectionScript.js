@@ -44,15 +44,11 @@ var getComments = function (markupid) {
 
 var showComments = function (markupid) {
   console.log('markupid on top', markupid);
-<<<<<<< HEAD
   if (markupid && commentsObj[markupid])  {
     vex.dialog.alert('Comments: ' + commentsObj[markupid]);
   } else {
     vex.dialog.alert('No Comments To Show');
   }
-=======
-  vex.dialog.alert('Comments: ' + commentsObj[markupid]);
->>>>>>> 0e11d5d1d6e8d5a6772869780538f4251c351932
 };
 
 
@@ -289,15 +285,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         $('body').delegate('.showComments', 'click', function () {
             if (!showFlag) {
-<<<<<<< HEAD
               var temp = $('.markable-tooltip').attr('id');
               var index = temp.indexOf('_') + 1;
               temp = temp.slice(index);
               showComments(temp);
-=======
-              console.log(markupId, 'markupid on the bottom');
-              showComments(markupId);
->>>>>>> 0e11d5d1d6e8d5a6772869780538f4251c351932
               showFlag = true;
             }
         });
