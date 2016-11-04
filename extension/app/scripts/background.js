@@ -2,6 +2,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
   if ( changeInfo.status === 'complete' ) {
     var username = localStorage.getItem('username');
     var destUrl = localStorage.getItem('destUrl');
+
     var tabUrl = tab.url;
     var userMarkups = [];
     if (username) {

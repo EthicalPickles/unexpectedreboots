@@ -7,6 +7,7 @@ var markupIds = [];
 var username = undefined;
 var groupsSelected = [];
 var groupsObj = {};
+var commentsObj = {};
 var test = null;
 
 
@@ -23,7 +24,12 @@ var getComments = function (markupid) {
       data: {markupid: markupid, groupids: groupsSelected},
       success: (data) => {
         if (data.length > 0) {
-          console.log(data, 'inside of get comments selection script!!!');
+          commentsObj[data[0].markupid] = data[0].comment;
+          console.log(commentsObj[data[0].markupid], 'COMMENTSOBJ! - !', commentsObj);
+          chrome.runtime.sendMessage({
+            text: 'testing-testing'
+          }, function(response) { console.log('this is just a test') });
+          // console.log(data, 'inside of get comments selection script!!!');
         }
       },
       error: (f) => {
@@ -31,6 +37,16 @@ var getComments = function (markupid) {
       }
     })
   }
+};
+
+
+/***************************************************
+      GET MARKUPID AND CALL SENDCOMMENT
+        WITH MARKUPID AND COMMENT
+****************************************************/
+
+var showComments = function (markupid) {
+  vex.dialog.alert('Comments: ' + commentsObj[markupid]);
 };
 
 
@@ -119,31 +135,6 @@ var sendComment = function (markupid, comment) {
     })
   });
 };
-
-/***************************************************
-    GET COMMENTS FROM BACKGROUND.JS
-****************************************************/
-
-
-// var getComments = function (markupid) {
-//   console.log('inside of get comments but not success!!!', globalGroupIds, markupid);
-//   chrome.runtime.sendMessage({
-//     text: 'getUsernameee'
-//   }, function(response) {
-//     $.ajax({
-//         type: 'POST',
-//         url: serverUrl + '/test/comments/get',
-//         data: {markupid: markupid, groupids: globalGroupIds},
-//         success: (data) => {
-//           console.log(data, 'inside of get comments selection script!!!');
-//         },
-//         error: (f) => {
-//           console.error(f, 'here');
-//         }
-//       })
-//   });
-// };
-
 
 
 /***************************************************
@@ -246,7 +237,6 @@ editor = new MediumEditor(elements, {
         end: '</span>',
         action: function(html, mark) {
           test = html;
-          console.log('error');
           return html;
         }
       }),
@@ -265,7 +255,6 @@ editor = new MediumEditor(elements, {
         end: '</span>',
         action: function(html, mark) {
           test = html;
-          // postSelection(html);
           return html;
         }
       })
@@ -300,6 +289,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (allSelections[i].markupid) {
       markupId = JSON.parse(allSelections[i].markupid);
       markupIds.push(markupId);
+    } else {
+      console.error('markupID undefined');
     }
 
     console.log(allSelections[i], 'allSelectionsFrank');
@@ -311,7 +302,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var html = '<span class="markable-tooltip"' + 'id="markupid_' + markupId + '"' +
       'style="background-color:' + colors[userSet[allSelections[i].author]] +
       ';">' + getCurrentSelection() + '<span class="markable-tooltip-popup">' + allSelections[i].author
-      + '<br>' + moment(allSelections[i].createdat).twitterShort() + ' ago</span></span>';
+      + '<br>' + moment(allSelections[i].createdat).twitterShort() + ' ago <button class="testing"> Show Comments </button> </span></span>';
+
     var sel = window.getSelection();
     var range;
 
@@ -336,7 +328,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       }
       var firstInsertedNode = fragment.firstChild;
       var lastInsertedNode = fragment.lastChild;
-      var flag = false;
+      var showFlag = false;
+      var postFlag = false;
       range.insertNode(fragment);
       if (firstInsertedNode) {
         range.setStartBefore(firstInsertedNode);
@@ -346,17 +339,40 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       sel.addRange(range);
     }
 
-    // getComments(markupId);
 
     $('#markupid_' + markupId).click(function () {
-      // if (!flag) {
-        console.log('inside of markup thing');
-        if (markupId) {
-          addComment(markupId);
-        }
-        // flag = true;
-      // }
-      // getComments(markupId);
+
+      if (markupId) {
+
+        vex.dialog.open({
+            message: 'Select a date and color.',
+            input: [
+                '<button class="showComments">',
+                'Show Comments',
+                '</button>',
+                '<button class="postComment">',
+                'Post Comment',
+                '</button>',
+            ].join(''),
+            callback: function (data) {
+              console.log('Data', data)
+            }
+        });
+
+        $('body').delegate('.showComments', 'click', function () {
+            if (!showFlag) {
+              showComments(markupId);
+              showFlag = true;
+            }
+        });
+
+        $('body').delegate('.postComment', 'click', function () {
+            if (!postFlag) {
+              addComment(markupId);
+              postFlag = true;
+            }
+        });
+      }
     });
   }
 });
