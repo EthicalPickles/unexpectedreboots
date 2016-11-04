@@ -26,9 +26,6 @@ var getComments = function (markupid) {
         if (data.length > 0) {
           commentsObj[data[0].markupid] = data[0].comment;
           console.log(commentsObj[data[0].markupid], 'COMMENTSOBJ! - !', commentsObj);
-          chrome.runtime.sendMessage({
-            text: 'testing-testing'
-          }, function(response) { console.log('this is just a test') });
           // console.log(data, 'inside of get comments selection script!!!');
         }
       },
@@ -47,7 +44,11 @@ var getComments = function (markupid) {
 
 var showComments = function (markupid) {
   console.log('markupid on top', markupid);
-  vex.dialog.alert('Comments: ' + commentsObj[markupid]);
+  if (markupid && commentsObj[markupid])  {
+    vex.dialog.alert('Comments: ' + commentsObj[markupid]);
+  } else {
+    vex.dialog.alert('No Comments To Show');
+  }
 };
 
 
@@ -224,7 +225,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var html = '<span class="markable-tooltip"' + 'id="markupid_' + markupId + '"' +
       'style="background-color:' + colors[userSet[allSelections[i].author]] +
       ';">' + getCurrentSelection() + '<span class="markable-tooltip-popup">' + allSelections[i].author
-      + '<br>' + moment(allSelections[i].createdat).twitterShort() + ' ago </span></span>';
+      + allSelections[i].markupid + '<br>'+ moment(allSelections[i].createdat).twitterShort() + ' ago </span></span>';
 
     var sel = window.getSelection();
     var range;
@@ -284,8 +285,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         $('body').delegate('.showComments', 'click', function () {
             if (!showFlag) {
-              console.log(markupId, 'markupid on the bottom');
-              showComments(markupId);
+              var temp = $('.markable-tooltip').attr('id');
+              var index = temp.indexOf('_') + 1;
+              temp = temp.slice(index);
+              showComments(temp);
               showFlag = true;
             }
         });
