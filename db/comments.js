@@ -83,7 +83,7 @@ var checkCommentExists = function(markupid, authorid, callback) {
 
 var getCommmentsByMarkup = function(markupid, callback) {
     pool.query({
-      text: 'SELECT * FROM comments WHERE markupid = \'' + markupid + '\;'
+      text: 'SELECT * FROM comments WHERE markupid = ' + markupid + ';'
     }, function(err, rows) {
     if(err) {
       callback(err, null);
@@ -100,8 +100,8 @@ var getCommmentsByMarkup = function(markupid, callback) {
 
 var checkGroupMarkupExists = function(markupid, groupid, callback) {
     pool.query({
-      text: 'SELECT * FROM markupsgroups WHERE markupid = \'' + markupid + '\' \
-      AND groupid = \'' + groupid +'\' ;'
+      text: 'SELECT * FROM markupsgroups WHERE markupid = ' + markupid + ' \
+      AND groupid = ' + groupid +' ;'
     }, function(err, rows) {
     if(err) {
       callback(err, null);
@@ -142,8 +142,10 @@ exports.setComment = function(markupid, username, comment, callback) {
 
 
 exports.getComments = function(markupid, groupids, callback) {
+  console.log('in databse stuff', markupid, groupids);
   //first grab comments
-  getCommmentsByMarkup(markupid, function(err, commments) {
+  getCommmentsByMarkup(markupid, function(err, comments) {
+    console.log('getcommentsbymarkup', err, comments);
     if(err) {
       //found error
       callback(err, null);
@@ -161,6 +163,7 @@ exports.getComments = function(markupid, groupids, callback) {
         checkGroupMarkupExists(markupid, groupid, (err, exists) => {
           //no error callback because we can check other groups
           if (!err && exists && !foundAny) {
+            console.log('anything!!!!!!!!!');
             callback(null, comments);
             foundAny = true;
             return;
