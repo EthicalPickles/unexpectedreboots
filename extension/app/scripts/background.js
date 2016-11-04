@@ -1,8 +1,7 @@
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
   if ( changeInfo.status === 'complete' ) {
     var username = localStorage.getItem('username');
-    // var destUrl = localStorage.getItem('destUrl');
-    var destUrl = 'http://127.0.0.1:3000';
+    var destUrl = localStorage.getItem('destUrl');
     var tabUrl = tab.url;
     var userMarkups = [];
     if (username) {
@@ -71,8 +70,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   var username = localStorage.getItem('username');
   var shareGroups = localStorage.getItem('groupsToShareWith');
-  // var destUrl = localStorage.getItem('destUrl');
-    var destUrl = 'http://127.0.0.1:3000';
+  var destUrl = localStorage.getItem('destUrl');
 
   if (request.text === 'getUsername') {
     sendResponse({username: username, groups: shareGroups, destUrl: destUrl});
