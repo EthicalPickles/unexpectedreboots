@@ -235,8 +235,33 @@ exports.remove = function(owner, groupID, username, callback) {
   function(err, rows) {
     if (err) {
       callback(err, null);
-    } else {
-      callback(null, true);
+      return;
+    }
+
+    if (owner) {
+      pool.query({
+        text: 'DELETE FROM usersgroups \
+               WHERE usersgroups.groupid = \'' + groupID + '\''
+      }, function(err2, rows2) {
+        if (err) {
+          callback(err2, null);
+          return;
+        }
+
+        pool.query({
+          text: 'DELETE FROM groups \
+                 WHERE groups.id = \'' + groupID + '\''
+        }, function(err3, rows3) {
+          if (err) {
+            callback(err3, null);
+            return;
+          }
+          
+          callback(null, true);
+        });
+      });
+    }
+
     }
   });
 
