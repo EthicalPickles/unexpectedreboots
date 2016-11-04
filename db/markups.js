@@ -131,7 +131,7 @@ var creatMarkupGroup = function(markupid, groupid, callback) {
 };
 
 exports.share = function(markupid, groupid, callback) {
-  lookupMarkupById(markupid, function(err, markup) {
+  exports.lookupMarkupById(markupid, function(err, markup) {
     if(err) {
       callback(err, null);
     } else {
