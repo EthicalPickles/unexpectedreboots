@@ -44,7 +44,7 @@ var getComments = function (markupid) {
 
 var showComments = function (markupid) {
   console.log('markupid on top', markupid);
-  if (markupid && commentsObj[markupid])  {
+  if (markupid && commentsObj[markupid]) {
     vex.dialog.alert('Comments: ' + commentsObj[markupid]);
   } else {
     vex.dialog.alert('No Comments To Show');
@@ -60,7 +60,7 @@ var showComments = function (markupid) {
 chrome.runtime.sendMessage({
   text: 'getUsername'
 }, function(response) {
-  console.log('Got response:', response.username, response.groups, response.shareGroups, response.destUrl);
+  console.log('Got response:', response.username, response.groups, response.destUrl);
   username = response.username;
   serverUrl = response.destUrl;
 
@@ -150,6 +150,7 @@ var elements = document.querySelectorAll("p, li, em, span, h1, h2, h3, h4, h5, t
 
 var postSelection = function(targetText, groups, comment) {
   var testExport = editor.exportSelection();
+  console.log('Posting selection');
   // console.log(groups, comment);
   chrome.runtime.sendMessage({
     action: 'add',
@@ -222,6 +223,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
   });
   console.log('allSelections', allSelections);
+  var username = request.username;
   for (var i = 0; i < allSelections.length; i++) {
     if (!userSet[allSelections[i].author]) {
       userSet[allSelections[i].author] = numbers.splice(0,1);
@@ -230,26 +232,31 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var importedSelection = JSON.parse(allSelections[i].anchor);
     var markupId;
     var author = allSelections[i].author;
-    console.log(author === username);
+    username = allSelections[i].username;
 
-    if (allSelections[i].markupid) {
-      markupId = JSON.parse(allSelections[i].markupid);
-      markupIds.push(markupId);
+
+    if (allSelections[i].id) {
+      markupId = JSON.parse(allSelections[i].id);
+      if (!markupIds.includes(markupId)) {
+        markupIds.push(markupId);
+      }
     } else {
-      console.error('markupID undefined');
+      console.error('markupId undefined');
     }
 
     editor.importSelection(importedSelection);
+    console.log('importedSelection', importedSelection);
 
     // <a href="#" class="markable-tooltip" style="background-color: yellow;">' + getCurrentSelection() + '<span> Testing a long tooltip </a>';
     var content = getCurrentSelection();
+    console.log('Author', author, 'Username', username);
     var removeHighlight = author === username ? '<button> Remove highlighting </button>' : '';
     var html = '<span class="markable-tooltip"' + 'id="markupid_' + markupId + '"' +
       'style="background-color:' + colors[userSet[allSelections[i].author]] + ';">' +
           content +
           '<span class="markable-tooltip-popup">' +
               allSelections[i].author + '<br>' + moment(allSelections[i].createdat).twitterShort() + ' ago' +
-              removeHighlight + 
+              removeHighlight +
           '</span>' +
       '</span>';
     var sel = window.getSelection();
@@ -291,54 +298,63 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     // It removes the highlighting and sends back to the database
     // to delete the markup.
     if (author === username) {
-      $('#markupid_' + markupId + ' button').click(function() {
-        console.log('Removed!');
-        var parent = $('#markupid_' + markupId).parent();
-        $('#markupid_' + markupId).remove();
-        parent.html(content);
-        removeMarkup(markupId);
-      });
+      console.log('Doing for ' + markupId);
+      var wrapper = function(markup, con) {
+
+        $('body').delegate('#markupid_' + markup + ' button', 'click', function(event) {
+          console.log('click appended', markup);
+          console.log(event.target);
+          $('#markupid_' + markup).css('background-color', 'inherit');
+          $('#markupid_' + markup).replaceWith(con);
+          removeMarkup(markup, con);
+        });
+
+
+      }(markupId, content);
     }
 
-    $('#markupid_' + markupId).click(function () {
+    var wrapper = function(markup) {
+      $('#markupid_' + markup).click(function () {
 
-      if (markupId) {
+        if (markup) {
 
-        vex.dialog.open({
-            message: 'Comments',
-            input: [
-                '<button class="showComments">',
-                'Show Comments',
-                '</button>',
-                '<button class="postComment">',
-                'Post Comment',
-                '</button>',
-            ].join(''),
-            callback: function (data) {
-              console.log('Data', data)
-            }
-        });
+          vex.dialog.open({
+              message: 'Comments',
+              input: [
+                  '<button class="showComments">',
+                  'Show Comments',
+                  '</button>',
+                  '<button class="postComment">',
+                  'Post Comment',
+                  '</button>',
+              ].join(''),
+              callback: function (data) {
+                console.log('Data', data)
+              }
+          });
 
-        $('body').delegate('.showComments', 'click', function () {
-            if (!showFlag) {
-              var temp = $('.markable-tooltip').attr('id');
-              var index = temp.indexOf('_') + 1;
-              temp = temp.slice(index);
-              showComments(temp);
-              showFlag = true;
-            }
-        });
+          $('body').delegate('.showComments', 'click', function () {
+              if (!showFlag) {
+                var temp = $('.markable-tooltip').attr('id');
+                var index = temp.indexOf('_') + 1;
+                temp = temp.slice(index);
+                showComments(temp);
+                showFlag = true;
+              }
+          });
 
-        $('body').delegate('.postComment', 'click', function () {
-            if (!postFlag) {
-              addComment(markupId);
-              postFlag = true;
-            }
-        });
-      }
-    });
+          $('body').delegate('.postComment', 'click', function () {
+              if (!postFlag) {
+                addComment(markup);
+                postFlag = true;
+              }
+          });
+        }
+      });
+    }(markupId);
   }
 });
+
 
 var getCurrentSelection = function() {
   var html = '';

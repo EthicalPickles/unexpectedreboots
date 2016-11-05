@@ -36,7 +36,8 @@ var updateComment = function(markupid, authorid, comment, callback) {
 var createComment = function(markupid, authorid, comment, callback) {
   pool.query({
     text: 'INSERT INTO comments(markupid, authorid, comment) \
-      VALUES($1, $2, $3)',
+      VALUES($1, $2, $3) \
+      RETURNING *',
       values: [markupid, authorid, cleanText(comment)]
   }, function(err, rows) {
     //if error send callback
