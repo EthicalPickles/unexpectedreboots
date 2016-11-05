@@ -230,6 +230,7 @@ exports.deleteSite = function(req, res) {
 ****************************************************/
 
 exports.createMarkup = function(req, res) {
+  console.log('routes.createMarkup: called!');
   var url = req.query.url || req.body.url;
   var title = req.query.title || req.body.title;
   var username = req.query.username || req.body.username;
