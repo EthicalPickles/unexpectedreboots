@@ -63,13 +63,15 @@ chrome.runtime.sendMessage({
   console.log('Got response:', response.username, response.groups, response.destUrl);
   username = response.username;
   serverUrl = response.destUrl;
-
+  if(response.groups === null) groupsObj = {};
   groupsObj = JSON.parse(response.groups);
 
   for (var key in groupsObj) {
-    groupsSelected.push(key);
+    if(groupsObj[key] === true) groupsSelected.push(key);
   }
 
+  //globalGroups = groupsSelected;
+  /*
   $.ajax({
     type: 'GET',
     url: serverUrl + '/test/users/groups',
@@ -82,7 +84,8 @@ chrome.runtime.sendMessage({
       }
       markupIds.forEach((id) => getComments(id));
     },
-  })
+  });
+  */
 });
 
 
@@ -212,6 +215,7 @@ var numbers = [0,1,2,3,4]
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   // Note: the selection property comes from the background script
+  console.log('!!');
   var allSelections = request.selection;
   allSelections.sort(function(b,a) {
     if(JSON.parse(a.anchor).editableElementIndex === JSON.parse(b.anchor).editableElementIndex) {

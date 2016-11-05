@@ -1,8 +1,8 @@
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
   if ( changeInfo.status === 'complete' ) {
     var username = localStorage.getItem('username');
-    // var destUrl = localStorage.getItem('destUrl');
-    var destUrl = 'http://127.0.0.1:3000';
+    var destUrl = localStorage.getItem('destUrl');
+    //var destUrl = 'http://127.0.0.1:3000';
 
     console.log('username', username);
 
@@ -35,18 +35,19 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   var username = localStorage.getItem('username');
-  // var destUrl = localStorage.getItem('destUrl');
-  var destUrl = 'http://127.0.0.1:3000';
+  var destUrl = localStorage.getItem('destUrl');
+  //var destUrl = 'http://127.0.0.1:3000';
 
   var shareGroups = localStorage.getItem('groupsToShareWith');
 
   if (request.text === 'getUsername') {
     sendResponse({username: username, groups: shareGroups, destUrl: destUrl});
   } else if (username) {
+    alert('!!');
     var selection = request.selection;
     var url = '';
     var title = '';
-    var text = request.text;33
+    var text = request.text;
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       url = tabs[0].url;
       title = tabs[0].title;
