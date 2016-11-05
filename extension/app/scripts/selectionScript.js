@@ -212,6 +212,15 @@ var numbers = [0,1,2,3,4]
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   // Note: the selection property comes from the background script
   var allSelections = request.selection;
+  allSelections.sort(function(b,a) {
+    if(JSON.parse(a.anchor).editableElementIndex === JSON.parse(b.anchor).editableElementIndex) {
+      //flip = !flip;
+      return JSON.parse(a.anchor).start - JSON.parse(b.anchor).start;
+    } else {
+      //flip = !flip;
+      return JSON.parse(a.anchor).editableElementIndex - JSON.parse(b.anchor).editableElementIndex;
+    }
+  });
   console.log('allSelections', allSelections);
   for (var i = 0; i < allSelections.length; i++) {
     if (!userSet[allSelections[i].author]) {
