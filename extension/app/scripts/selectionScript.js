@@ -225,7 +225,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     if (allSelections[i].markupid) {
       markupId = JSON.parse(allSelections[i].markupid);
-      markupIds.push(markupId);
+      if (!markupIds.includes(markupId)) {
+        markupIds.push(markupId);
+      }
     } else {
       console.error('markupID undefined');
     }
@@ -240,7 +242,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           content +
           '<span class="markable-tooltip-popup">' +
               allSelections[i].author + '<br>' + moment(allSelections[i].createdat).twitterShort() + ' ago' +
-              removeHighlight + 
+              removeHighlight +
           '</span>' +
       '</span>';
     var sel = window.getSelection();
