@@ -221,7 +221,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var importedSelection = JSON.parse(allSelections[i].anchor);
     var markupId;
     var author = allSelections[i].author;
-    console.log(author === username);
+
 
     if (allSelections[i].markupid) {
       markupId = JSON.parse(allSelections[i].markupid);
@@ -229,10 +229,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         markupIds.push(markupId);
       }
     } else {
-      console.error('markupID undefined');
+      console.error('markupId undefined');
     }
 
     editor.importSelection(importedSelection);
+    console.log('importedSelection', importedSelection);
 
     // <a href="#" class="markable-tooltip" style="background-color: yellow;">' + getCurrentSelection() + '<span> Testing a long tooltip </a>';
     var content = getCurrentSelection();
@@ -284,11 +285,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     // It removes the highlighting and sends back to the database
     // to delete the markup.
     if (author === username) {
-      $('#markupid_' + markupId + ' button').click(function() {
-        console.log('Removed!');
-        var parent = $('#markupid_' + markupId).parent();
-        $('#markupid_' + markupId).remove();
-        parent.html(content);
+      $('body').delegate('#markupid_' + markupId + ' button', 'click', function() {
+        $('#markupid_' + markupId).css('background-color', 'inherit');
+        $('#markupid_' + markupId).html(content);
         removeMarkup(markupId);
       });
     }
