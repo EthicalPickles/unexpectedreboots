@@ -60,7 +60,7 @@ var showComments = function (markupid) {
 chrome.runtime.sendMessage({
   text: 'getUsername'
 }, function(response) {
-  console.log('Got response:', response.username, response.groups, response.shareGroups, response.destUrl);
+  console.log('Got response:', response.username, response.groups, response.destUrl);
   username = response.username;
   serverUrl = response.destUrl;
 
@@ -213,7 +213,6 @@ var numbers = [0,1,2,3,4]
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   // Note: the selection property comes from the background script
   var allSelections = request.selection;
-  console.log('allSelections', allSelections, request.text);
   for (var i = 0; i < allSelections.length; i++) {
     if (!userSet[allSelections[i].author]) {
       userSet[allSelections[i].author] = numbers.splice(0,1);
@@ -222,10 +221,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var importedSelection = JSON.parse(allSelections[i].anchor);
     var markupId;
     var author = allSelections[i].author;
+    username = allSelections[i].username;
 
 
-    if (allSelections[i].markupid) {
-      markupId = JSON.parse(allSelections[i].markupid);
+    if (allSelections[i].id) {
+      markupId = JSON.parse(allSelections[i].id);
       if (!markupIds.includes(markupId)) {
         markupIds.push(markupId);
       }

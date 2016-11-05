@@ -258,6 +258,7 @@ exports.shareMarkup = function(req, res) {
   console.log('routes.shareMarkup - query', req.query);
   const markupID = req.body.markupID;
   const groupID = req.body.groupID;
+  console.log('REQ BODY BIATCH', req.body, req, 'REQ BODY BIATCH');
 
   markups.share(markupID, groupID, function(err, success) {
     err ? res.status(501).send(err) : res.send(success);
@@ -286,18 +287,14 @@ exports.createComment = function(req, res) {
 
 
 exports.getComments = function(req, res) {
-  console.log('in get Comments', req.body);
 
   const markupid = req.body.markupid;
   const groupids = req.body.groupids;
   var flag = false;
   comments.getComments(markupid, groupids, function(err, success) {
-    console.log('callback twice??????');
     if (flag) {
       return;
     }
-
-    console.log(success, 'SUCCESS IN EXPORTS.GETCOMMENTS');
 
     if (err) {
       console.log(err, 'error in get comments');
@@ -313,6 +310,7 @@ exports.getComments = function(req, res) {
 
 
 exports.getMarkups = function(req, res) {
+  // console.log(req, 'REQ');
   const url = req.body.url;
   const title = req.body.title;
   const groupids = req.body.groupids;

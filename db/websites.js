@@ -1,6 +1,7 @@
 var pg = require('pg');
 var Pool = require('pg').Pool;
 var Promise = require('es6-promise').Promise;
+var Users = require('./users');
 
 var CONFIG = {
   host: 'localhost',
@@ -63,10 +64,11 @@ exports.filterMarkup = function(markup, groupids, callback) {
   //send null when count reaches 0 if not found any
   var markupid = markup.id;
   var foundAny = false;
-  var num2check = groupid.length;
+  var num2check = groupids.length
   groupids.forEach( function(groupid) {
     exports.checkMarkupGroup(markupid, groupid, function(err, exists) {
       //immediate callback on error
+      console.log(markupid, exists, groupid, 'FILTER MARKUP MARKUPID EXISTS GROUPID');
       if (err) {
         callback(err, null);
       } else if (exists && !foundAny) {
@@ -92,15 +94,24 @@ exports.filterMarkups = function(markups, groupids, callback) {
   //add it to our array
   //send it off when we've checked every markup
   markups.forEach( function(markup) {
+    console.log(markup, markups, 'MARKUP MARKUPS');
     exports.filterMarkup(markup, groupids, function(err, useMarkup) {
       if (err) {
         callback(err, null);
-      } else if(useMarkup) {
-        filteredMarkups.push(markup);
-      }
-      markupsLeft --;
-      if (!markupsLeft) {
-        callback(null, filteredMarkups);
+      } else {
+        Users.getUser(markup.authorid, function (err, user) {
+          if (err) {
+            callback(err, null);
+          } else if(useMarkup) {
+            markup.author = user.username;
+            markup.username = user.username;
+            filteredMarkups.push(markup);
+          }
+          markupsLeft --;
+          if (!markupsLeft) {
+            callback(null, filteredMarkups);
+          }
+        });
       }
     });
   });
@@ -108,7 +119,10 @@ exports.filterMarkups = function(markups, groupids, callback) {
 
 
 exports.getMarkups = function(url, title, groupids, callback) {
+  groupids = groupids || [];
+
   exports.getSite(url, title, function(err, site) {
+    console.log('SITE', site);
     if (err) {
       callback(err, null);
     } else if (!site) {
@@ -116,6 +130,7 @@ exports.getMarkups = function(url, title, groupids, callback) {
       callback(null, []);
     } else {
       exports.getMarkupsBySite(site.id, function(err, markups) {
+        console.log('markups', markups);
         if (err) {
           callback(err, null);
         } else {
