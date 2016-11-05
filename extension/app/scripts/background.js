@@ -93,6 +93,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
           for(groupID in shareGroups) {
             if(shareGroups[groupID] === true) {
+              console.log('Sharing with', groupID, 'data', data);
               $.ajax({
                 type: 'POST',
                 url: destUrl + '/test/markups/share',
