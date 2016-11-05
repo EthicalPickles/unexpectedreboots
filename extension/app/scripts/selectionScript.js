@@ -60,7 +60,7 @@ var showComments = function (markupid) {
 chrome.runtime.sendMessage({
   text: 'getUsername'
 }, function(response) {
-
+  console.log('Got response:', response.username, response.groups, response.shareGroups, response.destUrl);
   username = response.username;
   serverUrl = response.destUrl;
 
