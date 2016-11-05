@@ -150,6 +150,7 @@ var elements = document.querySelectorAll("p, li, em, span, h1, h2, h3, h4, h5, t
 
 var postSelection = function(targetText, groups, comment) {
   var testExport = editor.exportSelection();
+  console.log('Posting selection');
   // console.log(groups, comment);
   chrome.runtime.sendMessage({
     action: 'add',
@@ -212,7 +213,7 @@ var numbers = [0,1,2,3,4]
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   // Note: the selection property comes from the background script
   var allSelections = request.selection;
-  console.log('allSelections', allSelections);
+  console.log('allSelections', allSelections, request.text);
   for (var i = 0; i < allSelections.length; i++) {
     if (!userSet[allSelections[i].author]) {
       userSet[allSelections[i].author] = numbers.splice(0,1);
@@ -285,52 +286,69 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     // It removes the highlighting and sends back to the database
     // to delete the markup.
     if (author === username) {
-      $('body').delegate('#markupid_' + markupId + ' button', 'click', function() {
-        $('#markupid_' + markupId).css('background-color', 'inherit');
-        $('#markupid_' + markupId).html(content);
-        removeMarkup(markupId);
-      });
+      console.log('Doing for ' + markupId);
+      var wrapper = function(markup, con) {
+
+        $('body').delegate('#markupid_' + markup + ' button', 'click', function(event) {
+          console.log('click appended', markup);
+          console.log(event.target);
+          $('#markupid_' + markup).css('background-color', 'inherit');
+          $('#markupid_' + markup).html(con);
+          removeMarkup(markup, con);
+        });
+
+
+      }(markupId, content);
     }
 
-    $('#markupid_' + markupId).click(function () {
+    var wrapper = function(markup) {
+      $('#markupid_' + markup).click(function () {
 
-      if (markupId) {
+        if (markup) {
 
-        vex.dialog.open({
-            message: 'Comments',
-            input: [
-                '<button class="showComments">',
-                'Show Comments',
-                '</button>',
-                '<button class="postComment">',
-                'Post Comment',
-                '</button>',
-            ].join(''),
-            callback: function (data) {
-              console.log('Data', data)
-            }
-        });
+          vex.dialog.open({
+              message: 'Comments',
+              input: [
+                  '<button class="showComments">',
+                  'Show Comments',
+                  '</button>',
+                  '<button class="postComment">',
+                  'Post Comment',
+                  '</button>',
+              ].join(''),
+              callback: function (data) {
+                console.log('Data', data)
+              }
+          });
 
-        $('body').delegate('.showComments', 'click', function () {
-            if (!showFlag) {
-              var temp = $('.markable-tooltip').attr('id');
-              var index = temp.indexOf('_') + 1;
-              temp = temp.slice(index);
-              showComments(temp);
-              showFlag = true;
-            }
-        });
+          $('body').delegate('.showComments', 'click', function () {
+              if (!showFlag) {
+                var temp = $('.markable-tooltip').attr('id');
+                var index = temp.indexOf('_') + 1;
+                temp = temp.slice(index);
+                showComments(temp);
+                showFlag = true;
+              }
+          });
 
-        $('body').delegate('.postComment', 'click', function () {
-            if (!postFlag) {
-              addComment(markupId);
-              postFlag = true;
-            }
-        });
-      }
-    });
+          $('body').delegate('.postComment', 'click', function () {
+              if (!postFlag) {
+                addComment(markup);
+                postFlag = true;
+              }
+          });
+        }
+      });
+    }(markupId);
   }
 });
+
+
+// chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
+
+// });
+
+
 
 var getCurrentSelection = function() {
   var html = '';
