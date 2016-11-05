@@ -68,7 +68,6 @@ exports.filterMarkup = function(markup, groupids, callback) {
   groupids.forEach( function(groupid) {
     exports.checkMarkupGroup(markupid, groupid, function(err, exists) {
       //immediate callback on error
-      console.log(markupid, exists, groupid, 'FILTER MARKUP MARKUPID EXISTS GROUPID');
       if (err) {
         callback(err, null);
       } else if (exists && !foundAny) {
@@ -94,7 +93,6 @@ exports.filterMarkups = function(markups, groupids, callback) {
   //add it to our array
   //send it off when we've checked every markup
   markups.forEach( function(markup) {
-    console.log(markup, markups, 'MARKUP MARKUPS');
     exports.filterMarkup(markup, groupids, function(err, useMarkup) {
       if (err) {
         callback(err, null);
@@ -122,7 +120,6 @@ exports.getMarkups = function(url, title, groupids, callback) {
   groupids = groupids || [];
 
   exports.getSite(url, title, function(err, site) {
-    console.log('SITE', site);
     if (err) {
       callback(err, null);
     } else if (!site) {
@@ -130,7 +127,6 @@ exports.getMarkups = function(url, title, groupids, callback) {
       callback(null, []);
     } else {
       exports.getMarkupsBySite(site.id, function(err, markups) {
-        console.log('markups', markups);
         if (err) {
           callback(err, null);
         } else {

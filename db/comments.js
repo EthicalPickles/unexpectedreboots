@@ -50,7 +50,6 @@ var createComment = function(markupid, authorid, comment, callback) {
 };
 
 var getUserFromName = function(username, callback) {
-  console.log('in get username!!!!!!!!!');
   pool.query({
     text: 'SELECT * FROM users u WHERE u.username = \'' + username + '\' ;'
   }, function(err, rows) {
@@ -119,16 +118,13 @@ var checkGroupMarkupExists = function(markupid, groupid, callback) {
 
 
 exports.setComment = function(markupid, username, comment, callback) {
-  console.log('in set comment', comment);
   //first get userid
   getUserFromName(username, function(err, user) {
     if(err) {
       callback(err, null);
     } else {
       const authorid = user.id;
-      console.log('Set comment for user ' + username + ' markupid ' + markupid);
       checkCommentExists(markupid, authorid, function(err, exists) {
-        console.log('check comment exists', exists);
         //if exists, update
         if (exists) {
           updateComment(markupid, authorid, comment, callback);
@@ -143,10 +139,8 @@ exports.setComment = function(markupid, username, comment, callback) {
 
 
 exports.getComments = function(markupid, groupids, callback) {
-  console.log('in databse stuff', markupid, groupids);
   //first grab comments
   getCommmentsByMarkup(markupid, function(err, comments) {
-    console.log('getcommentsbymarkup', err, comments);
     if(err) {
       //found error
       callback(err, null);
@@ -158,13 +152,11 @@ exports.getComments = function(markupid, groupids, callback) {
       var counter = 0;
       if (groupids) {
         groupids.forEach((groupid) => {
-          console.log(comments, 'comments', groupid, 'GROUPID----- RIGHT HERE FRANK');
 
           //now check if the markup is part of any of the groups we are using
           checkGroupMarkupExists(markupid, parseInt(groupid), (err, exists) => {
             //no error callback because we can check other groups
             if (!err && exists && !foundAny) {
-              console.log('anything!!!!!!!!!!@#$%^&*', comments[0]);
               callback(null, comments);
               foundAny = true;
             }

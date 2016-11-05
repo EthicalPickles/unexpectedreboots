@@ -286,8 +286,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       }
       var firstInsertedNode = fragment.firstChild;
       var lastInsertedNode = fragment.lastChild;
-      var showFlag = false;
-      var postFlag = false;
 
       range.insertNode(fragment);
       if (firstInsertedNode) {
@@ -302,12 +300,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     // It removes the highlighting and sends back to the database
     // to delete the markup.
     if (author === username) {
-      console.log('Doing for ' + markupId);
       var wrapper = function(markup, con) {
 
         $('body').delegate('#markupid_' + markup + ' button', 'click', function(event) {
-          console.log('click appended', markup);
-          console.log(event.target);
           $('#markupid_' + markup).css('background-color', 'inherit');
           $('#markupid_' + markup).replaceWith(con);
           removeMarkup(markup, con);
@@ -317,15 +312,28 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       }(markupId, content);
     }
 
-    var wrapper = function(markup) {
-      $('#markupid_' + markup).click(function () {
+    var wrapper = function(markupId) {
 
-        if (markup) {
+      $('body').delegate('#buttonid_' + markupId, 'click', function (event) {
+        showComments(markupId);
+      });
+
+      $('body').delegate('.postComment', 'click', function () {
+        addComment(markupId);
+      });
+
+      $('#markupid_' + markupId).click(function (event) {
+        var $button = $(event.target);
+        var currentId = $button[0].id;
+        var index = currentId.indexOf('_') + 1;
+        currentId = currentId.slice(index);
+
+        if (markupId) {
 
           vex.dialog.open({
               message: 'Comments',
               input: [
-                  '<button class="showComments">',
+                  '<button class="showComments" id="buttonid_' + currentId +'">',
                   'Show Comments',
                   '</button>',
                   '<button class="postComment">',
@@ -334,23 +342,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
               ].join(''),
               callback: function (data) {
                 console.log('Data', data)
-              }
-          });
-
-          $('body').delegate('.showComments', 'click', function () {
-              if (!showFlag) {
-                var temp = $('.markable-tooltip').attr('id');
-                var index = temp.indexOf('_') + 1;
-                temp = temp.slice(index);
-                showComments(temp);
-                showFlag = true;
-              }
-          });
-
-          $('body').delegate('.postComment', 'click', function () {
-              if (!postFlag) {
-                addComment(markup);
-                postFlag = true;
               }
           });
         }

@@ -122,7 +122,6 @@ exports.lookupMarkupById = function(markupid, callback) {
 
 
 var creatMarkupGroup = function(markupid, groupid, callback) {
-  console.log('/** CREATING MARKUPGROUP markupid', markupid, ' groupid', groupid, ' **/');
   pool.query({
     // insert shared markup into markupsgroups
     text: 'INSERT INTO markupsgroups(markupid, groupid) \
@@ -131,8 +130,6 @@ var creatMarkupGroup = function(markupid, groupid, callback) {
       values: [markupid, groupid]
   },
   function(err, rows) {
-    console.log('ERR', err);
-    console.log('ROWS', rows);
     err ? callback(err, null) : callback(null, rows.rows[0]);
   });
 };
@@ -140,12 +137,10 @@ var creatMarkupGroup = function(markupid, groupid, callback) {
 exports.share = function(markupid, groupid, callback) {
   exports.lookupMarkupById(markupid, function(err, markup) {
     if(err) {
-      console.log('markups.share: fail on markup lookup', err);
       callback(err, null);
     } else {
       groups.getGroupById(groupid, function(err, group) {
         if(err) {
-          console.log('markups.share: fail on group lookup', err);
           callback(err, null);
         } else {
           creatMarkupGroup(markupid, groupid, function (err, markupgroup) {

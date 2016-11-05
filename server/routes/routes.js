@@ -230,7 +230,6 @@ exports.deleteSite = function(req, res) {
 ****************************************************/
 
 exports.createMarkup = function(req, res) {
-  console.log('routes.createMarkup: called!');
   var url = req.query.url || req.body.url;
   var title = req.query.title || req.body.title;
   var username = req.query.username || req.body.username;
@@ -254,11 +253,8 @@ exports.createMarkup = function(req, res) {
 };
 
 exports.shareMarkup = function(req, res) {
-  console.log('routes.shareMarkup - body', req.body);
-  console.log('routes.shareMarkup - query', req.query);
   const markupID = req.body.markupID;
   const groupID = req.body.groupID;
-  console.log('REQ BODY BIATCH', req.body, req, 'REQ BODY BIATCH');
 
   markups.share(markupID, groupID, function(err, success) {
     err ? res.status(501).send(err) : res.send(success);
@@ -299,9 +295,6 @@ exports.getComments = function(req, res) {
     if (err) {
       console.log(err, 'error in get comments');
     }
-    if (success.length > 0) {
-      console.log('franco this is being successful', success, err, success[0]);
-    }
 
     err ? res.status(404).send(err) : res.send(success);
     flag = true;
@@ -310,11 +303,9 @@ exports.getComments = function(req, res) {
 
 
 exports.getMarkups = function(req, res) {
-  // console.log(req, 'REQ');
   const url = req.body.url;
   const title = req.body.title;
   const groupids = req.body.groupids;
-  console.log('Getting markups for url', url, 'title', title, 'groupids', groupids);
 
   websites.getMarkups(url, title, groupids, function(err, markups) {
     err ? res.status(404).send(err) : res.send(markups);
