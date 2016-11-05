@@ -163,12 +163,13 @@ var postSelection = function(targetText, groups, comment) {
 };
 
 var removeMarkup = function(markupId) {
-  chrome.runtime.sendMessage({
-    action: 'remove',
-    markupId: markupId
-  }, function(response) {
+  console.log('Stubbed functionality: implement removeMarkup');
+  // chrome.runtime.sendMessage({
+  //   action: 'remove',
+  //   markupId: markupId
+  // }, function(response) {
 
-  });
+  // });
 };
 
 
@@ -219,6 +220,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     var importedSelection = JSON.parse(allSelections[i].anchor);
     var markupId;
+    var author = allSelections[i].author;
+    console.log(author === username);
 
     if (allSelections[i].markupid) {
       markupId = JSON.parse(allSelections[i].markupid);
@@ -231,7 +234,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     // <a href="#" class="markable-tooltip" style="background-color: yellow;">' + getCurrentSelection() + '<span> Testing a long tooltip </a>';
 
-
+    var removeHighlight = author === username ? '<button> Remove highlighting </button>' : '';
     var html = '<span class="markable-tooltip"' + 'id="markupid_' + markupId + '"' +
       'style="background-color:' + colors[userSet[allSelections[i].author]] + ';">' +
           '<span id="markupid_' + markupId + '_contents"' +
@@ -239,7 +242,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           '</span>' +
           '<span class="markable-tooltip-popup">' +
               allSelections[i].author + '<br>' + moment(allSelections[i].createdat).twitterShort() + ' ago' +
-              '<button> Remove highlighting </button>' + 
+              // removeHighlight + 
           '</span>' +
       '</span>';
     var sel = window.getSelection();
@@ -280,14 +283,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     // This one places a listener on the button on the tool tip
     // It removes the highlighting and sends back to the database
     // to delete the markup.
-    $('#markupid_' + markupId + ' button').click(function() {
-      console.log('Removed!');
-      var contents = $('#markupid_' + markupId + '_contents').html();
-      var parent = $('#markupid_' + markupId).parent();
-      $('#markupid_' + markupId).remove();
-      parent.html(contents);
-      removeMarkup(markupId);
-    });
+    if (author === username) {
+      $('#markupid_' + markupId + ' button').click(function() {
+
+        console.log('Removed!');
+        var contents = $('#markupid_' + markupId + '_contents').html();
+        var parent = $('#markupid_' + markupId).parent();
+        $('#markupid_' + markupId).remove();
+        parent.html(contents);
+        removeMarkup(markupId);
+      });
+    }
 
     $('#markupid_' + markupId).click(function () {
 
