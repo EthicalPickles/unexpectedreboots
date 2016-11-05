@@ -44,7 +44,7 @@ var getComments = function (markupid) {
 
 var showComments = function (markupid) {
   console.log('markupid on top', markupid);
-  if (markupid && commentsObj[markupid])  {
+  if (markupid && commentsObj[markupid]) {
     vex.dialog.alert('Comments: ' + commentsObj[markupid]);
   } else {
     vex.dialog.alert('No Comments To Show');
@@ -213,6 +213,8 @@ var numbers = [0,1,2,3,4]
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   // Note: the selection property comes from the background script
   var allSelections = request.selection;
+  var username = request.username;
+  console.log('allSelections', allSelections, request.text);
   for (var i = 0; i < allSelections.length; i++) {
     if (!userSet[allSelections[i].author]) {
       userSet[allSelections[i].author] = numbers.splice(0,1);
@@ -238,6 +240,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     // <a href="#" class="markable-tooltip" style="background-color: yellow;">' + getCurrentSelection() + '<span> Testing a long tooltip </a>';
     var content = getCurrentSelection();
+    console.log('Author', author, 'Username', username);
     var removeHighlight = author === username ? '<button> Remove highlighting </button>' : '';
     var html = '<span class="markable-tooltip"' + 'id="markupid_' + markupId + '"' +
       'style="background-color:' + colors[userSet[allSelections[i].author]] + ';">' +
@@ -293,7 +296,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           console.log('click appended', markup);
           console.log(event.target);
           $('#markupid_' + markup).css('background-color', 'inherit');
-          $('#markupid_' + markup).html(con);
+          $('#markupid_' + markup).replaceWith(con);
           removeMarkup(markup, con);
         });
 
@@ -342,12 +345,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }(markupId);
   }
 });
-
-
-// chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
-
-// });
-
 
 
 var getCurrentSelection = function() {

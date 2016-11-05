@@ -4,6 +4,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
     // var destUrl = localStorage.getItem('destUrl');
     var destUrl = 'http://127.0.0.1:3000';
 
+    console.log('username', username);
+
     var tabUrl = tab.url;
     var tabTitle = tab.title;
     var tabId = tab.id;
@@ -25,7 +27,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab ) {
       data: {groupids: groupids, url: tabUrl, title: tabTitle},
       success: function(response) {
         console.log(response[0], response, 'RESPONSE IN AJAX CALL');
-        chrome.tabs.sendMessage(tabId, {selection: response});
+        chrome.tabs.sendMessage(tabId, {selection: response, username: username});
       }
     });
   }
