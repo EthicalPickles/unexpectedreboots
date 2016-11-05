@@ -233,16 +233,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     editor.importSelection(importedSelection);
 
     // <a href="#" class="markable-tooltip" style="background-color: yellow;">' + getCurrentSelection() + '<span> Testing a long tooltip </a>';
-
+    var content = getCurrentSelection();
     var removeHighlight = author === username ? '<button> Remove highlighting </button>' : '';
     var html = '<span class="markable-tooltip"' + 'id="markupid_' + markupId + '"' +
       'style="background-color:' + colors[userSet[allSelections[i].author]] + ';">' +
-          '<span id="markupid_' + markupId + '_contents"' +
-              getCurrentSelection() +
-          '</span>' +
+          content +
           '<span class="markable-tooltip-popup">' +
               allSelections[i].author + '<br>' + moment(allSelections[i].createdat).twitterShort() + ' ago' +
-              // removeHighlight + 
+              removeHighlight + 
           '</span>' +
       '</span>';
     var sel = window.getSelection();
@@ -259,12 +257,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       if (range.createContextualFragment) {
         fragment = range.createContextualFragment(html);
       } else {
-        // var div = document.createElement('div');
-        // div.innerHTML = html;
-        // fragment = document.createDocumentFragment();
-        // while ((child = div.firstChild)) {
-        //   fragment.appendChild(child);
-        // }
+        var div = document.createElement('div');
+        div.innerHTML = html;
+        fragment = document.createDocumentFragment();
+        while ((child = div.firstChild)) {
+          fragment.appendChild(child);
+        }
       }
       var firstInsertedNode = fragment.firstChild;
       var lastInsertedNode = fragment.lastChild;
@@ -285,12 +283,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     // to delete the markup.
     if (author === username) {
       $('#markupid_' + markupId + ' button').click(function() {
-
         console.log('Removed!');
-        var contents = $('#markupid_' + markupId + '_contents').html();
         var parent = $('#markupid_' + markupId).parent();
         $('#markupid_' + markupId).remove();
-        parent.html(contents);
+        parent.html(content);
         removeMarkup(markupId);
       });
     }
