@@ -253,6 +253,8 @@ exports.createMarkup = function(req, res) {
 };
 
 exports.shareMarkup = function(req, res) {
+  console.log('routes.shareMarkup - body', req.body);
+  console.log('routes.shareMarkup - query', req.query);
   const markupID = req.body.markupID;
   const groupID = req.body.groupID;
 
